@@ -1,68 +1,137 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+* {
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  background: #000;
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  justify-content: center;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.app {
+  width: 25rem;
+  height: 32rem;
+  margin-top: 5rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.94);
 }
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+.app__new-task {
+  display: flex;
+  justify-content: space-between;
+}
+.app__new-task__input {
+  width: 15rem;
+  height: 2, 7rem;
+  background-color: rgba(255, 255, 255, 0);
+  outline: none;
+}
+.app__new-task__button {
+  width: 7.2rem;
+  height: 2.7rem;
+  color: white;
+  background: rgb(117, 141, 248);
+  border: 1px rgb(117, 141, 248) solid;
+  border-radius: 0.5rem;
   cursor: pointer;
-  transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
+.app__new-task__button:hover {
+  background: rgb(100, 126, 244);
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.app__new-task__button:active {
+  background: rgb(72, 104, 247);
+}
+.app__tabs {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+  color: rgb(135, 132, 132);
+  display: flex;
+  justify-content: space-between;
+}
+.app__tabs__tab {
+  cursor: pointer;
+}
+.app__tabs__tab:hover {
+  color: rgb(79, 76, 76);
+}
+.app__tabs__tab:active {
+  color: rgb(117, 141, 248);
+}
+.app__tabs__tab:visited {
+  color: rgb(117, 141, 248);
+}
+.app__task-list {
+  display: flex;
+  gap: 1.8rem;
+}
+.app__task-list__task {
+  margin-top: 1rem;
+  padding: 0.7rem;
+  min-height: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.app__task-list__task__button {
+  width: 3rem;
+  height: 2.7rem;
+  border: 1px white solid;
+  border-radius: 0.5rem;
+  cursor: pointer;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.task-input {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
+
+.task-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.button-edit {
+  background: rgb(117, 141, 248);
+}
+.button-edit:hover {
+  background: rgb(100, 126, 244);
+}
+.button-edit:active {
+  background: rgb(72, 104, 247);
+}
+
+.button-delete {
+  background: rgba(237, 65, 65, 0.807);
+}
+.button-delete:hover {
+  background: rgba(239, 40, 40, 0.807);
+}
+.button-delete:active {
+  background: rgba(243, 5, 5, 0.807);
+}
+
+.input_valid {
+  border: 2px rgb(199, 195, 195);
+  border-style: none none solid none;
+}
+
+.input_invalid {
+  border: 2px #ec5c5c;
+  border-style: none none solid none;
+}
+.input_invalid::-moz-placeholder {
+  color: #ec5c5c;
+}
+.input_invalid::placeholder {
+  color: #ec5c5c;
+}
+
+.checked {
+  text-decoration: line-through;
+}/*# sourceMappingURL=index.css.map */
