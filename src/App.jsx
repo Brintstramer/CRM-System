@@ -2,23 +2,23 @@ import NewTask from "./components/NewTask";
 import Tabs from "./components/Tabs";
 import TaskList from "./components/TaskList";
 import { tasks } from "./data/tasks";
-import { useState } from "react";
+import { use, useState } from "react";
 
 export default function App() {
   const [enteredNewTask, setEnteredNewTask] = useState("");
   const [taskList, setTaskList] = useState(tasks);
-  const [isValidTask, setIsValidTask] = useState(false);
+  const [isInvalidTask, setIsInvalidTask] = useState(false);
 
-  const newTaskInvalid = isValidTask && enteredNewTask === "";
-  let numberCheckedTasks;
+  const newTaskInvalid = isInvalidTask && enteredNewTask === "";
+  let checkedTasks;
 
-  function handleInputChange(event) {
+  function handleInputChangeNewTask(event) {
     setEnteredNewTask(event.target.value);
   }
 
   function addTask(enteredNewTask) {
     if (enteredNewTask === "") {
-      setIsValidTask(true);
+      setIsInvalidTask(true);
     } else {
       setTaskList((prevTaskList) => {
         return [{ taskText: enteredNewTask }, ...prevTaskList];
@@ -26,38 +26,38 @@ export default function App() {
     }
   }
 
-  function handleTabAll() {
+  function handleTabAll(event) {
     setTaskList(tasks);
+    console.log(event);
   }
 
   function handleTabInWork() {
-    setTaskList(tasks.filter((task) => !task.state));
+    setTaskList(taskList.filter((task) => !task.state));
   }
 
-  function handleTabDone() {
-    setTaskList(tasks.filter((task) => task.state));
+  function handleTabDone(event) {
+    setTaskList(taskList.filter((task) => task.state));
+    console.log(event);
   }
 
   function handleCheckboxChange(value, index) {
     taskList[index].state = value.target.checked;
 
-    setTaskList(tasks);
+    setTaskList(taskList);
   }
-
-  console.log(taskList);
 
   return (
     <div className="app">
       <NewTask
         invalid={newTaskInvalid}
-        onChange={handleInputChange}
+        onChange={handleInputChangeNewTask}
         onClick={addTask}
         enteredNewTask={enteredNewTask}
       >
-        Add
+        Создать
       </NewTask>
       <Tabs
-        taskList={taskList}
+        checkedTasks={checkedTasks}
         onHandleTabAll={handleTabAll}
         onHandleTabInWork={handleTabInWork}
         onHandleTabDone={handleTabDone}

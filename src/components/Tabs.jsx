@@ -1,24 +1,24 @@
 import { tasks } from "../data/tasks";
 
 export default function Tabs({
-  taskList,
+  checkedTasks,
   onHandleTabAll,
   onHandleTabInWork,
   onHandleTabDone,
 }) {
   return (
     <nav className="app__tabs">
-      <a className="app__tabs__tab" onClick={onHandleTabAll}>
-        {`Все (${tasks.length})`}
+      <a className="app__tabs__tab" onClick={(event) => onHandleTabAll(event)}>
+        {"Все"} <span>(12)</span>
       </a>
       <a
         className="app__tabs__tab"
         onClick={() => onHandleTabInWork()}
-      >{`в работе (${tasks.length - taskList.length})`}</a>
+      >{`в работе (${tasks.length - checkedTasks})`}</a>
       <a
         className="app__tabs__tab"
-        onClick={() => onHandleTabDone()}
-      >{`сделано (${taskList.length})`}</a>
+        onClick={(event) => onHandleTabDone(event)}
+      >{`сделано (${checkedTasks})`}</a>
     </nav>
   );
 }

@@ -6,7 +6,7 @@ export default function NewTask({
   enteredNewTask,
 }) {
   let inputClasses = "app__new-task__input";
-  let inputPlaceholder = "Task To Be Done...";
+  let inputPlaceholder = "Напишите задачу...";
 
   if (invalid) {
     inputClasses += " input_invalid";

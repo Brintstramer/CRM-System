@@ -11,8 +11,8 @@ body {
 }
 
 .app {
-  width: 25rem;
-  height: 32rem;
+  width: 28rem;
+  height: 40rem;
   margin-top: 5rem;
   padding: 2rem;
   background: rgba(255, 255, 255, 0.94);
@@ -96,23 +96,23 @@ body {
   gap: 1rem;
 }
 
-.button-edit {
+.button_blue {
   background: rgb(117, 141, 248);
 }
-.button-edit:hover {
+.button_blue:hover {
   background: rgb(100, 126, 244);
 }
-.button-edit:active {
+.button_blue:active {
   background: rgb(72, 104, 247);
 }
 
-.button-delete {
+.button_red {
   background: rgba(237, 65, 65, 0.807);
 }
-.button-delete:hover {
+.button_red:hover {
   background: rgba(239, 40, 40, 0.807);
 }
-.button-delete:active {
+.button_red:active {
   background: rgba(243, 5, 5, 0.807);
 }
 
@@ -134,4 +134,15 @@ body {
 
 .checked {
   text-decoration: line-through;
+}
+
+.editable-input {
+  padding-left: 1rem;
+  font-size: 1rem;
+  border: none;
+  outline: #000;
+}
+
+.save-cancel-buttons {
+  width: 4.5rem;
 }/*# sourceMappingURL=index.css.map */

@@ -11,8 +11,8 @@ body {
 }
 
 .app {
-  width: 25rem;
-  height: 32rem;
+  width: 28rem;
+  height: 40rem;
   margin-top: 5rem;
   padding: 2rem;
   background: rgb(255 255 255 / 94%);
@@ -109,7 +109,7 @@ body {
   gap: 1rem;
 }
 
-.button-edit {
+.button_blue {
   background: rgb(117, 141, 248);
 
   &:hover {
@@ -121,7 +121,7 @@ body {
   }
 }
 
-.button-delete {
+.button_red {
   background: rgba(237, 65, 65, 0.807);
 
   &:hover {
@@ -149,4 +149,15 @@ body {
 
 .checked {
   text-decoration: line-through;
+}
+
+.editable-input {
+  padding-left: 1rem;
+  font-size: 1rem;
+  border: none;
+  outline: #000;
+}
+
+.save-cancel-buttons {
+  width: 4.5rem;
 }

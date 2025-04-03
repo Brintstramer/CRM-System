@@ -1,6 +1,6 @@
 import Task from "./Task";
 
-export default function TaskList({ taskList, onCheckboxChange }) {
+export default function TaskList({ taskList, onCheckboxChange, onEditTask }) {
   return (
     <ol className="app__tasks">
       {taskList.map((task, index) => (
