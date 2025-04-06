@@ -1,24 +1,40 @@
-import { tasks } from "../data/tasks";
-
 export default function Tabs({
-  checkedTasks,
-  onHandleTabAll,
-  onHandleTabInWork,
-  onHandleTabDone,
+  filterTaskList,
+  setFilter,
+  filter,
+  tasksNumber,
 }) {
   return (
     <nav className="app__tabs">
-      <a className="app__tabs__tab" onClick={(event) => onHandleTabAll(event)}>
-        {"Все"} <span>(12)</span>
+      <a
+        className={`app__tabs__tab ${
+          filter === "all" && "app__tabs__tab_active"
+        }`}
+        onClick={() => {
+          setFilter("all");
+          filterTaskList("all");
+        }}
+      >
+        {`Все (${tasksNumber.all})`}
       </a>
       <a
-        className="app__tabs__tab"
-        onClick={() => onHandleTabInWork()}
-      >{`в работе (${tasks.length - checkedTasks})`}</a>
+        className={`app__tabs__tab ${
+          filter === "inWork" && "app__tabs__tab_active"
+        }`}
+        onClick={() => {
+          setFilter("inWork");
+          filterTaskList("inWork");
+        }}
+      >{`в работе (${tasksNumber.inWork})`}</a>
       <a
-        className="app__tabs__tab"
-        onClick={(event) => onHandleTabDone(event)}
-      >{`сделано (${checkedTasks})`}</a>
+        className={`app__tabs__tab ${
+          filter === "completed" && "app__tabs__tab_active"
+        }`}
+        onClick={() => {
+          setFilter("completed");
+          filterTaskList("completed");
+        }}
+      >{`сделано (${tasksNumber.completed})`}</a>
     </nav>
   );
 }

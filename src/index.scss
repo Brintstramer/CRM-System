@@ -12,7 +12,7 @@ body {
 
 .app {
   width: 28rem;
-  height: 40rem;
+  height: 42rem;
   margin-top: 5rem;
   padding: 2rem;
   background: rgb(255 255 255 / 94%);
@@ -26,6 +26,8 @@ body {
       height: 2, 7rem;
       background-color: #ffffff00;
       outline: none;
+      border: 2px rgb(199, 195, 195);
+      border-style: none none solid none;
     }
 
     &__button {
@@ -48,7 +50,7 @@ body {
   }
 
   &__tabs {
-    margin-top: 2rem;
+    margin-top: 1.8rem;
     font-size: 1.2rem;
     color: rgb(135, 132, 132);
     display: flex;
@@ -57,16 +59,16 @@ body {
     &__tab {
       cursor: pointer;
 
-      &:hover {
-        color: rgb(79, 76, 76);
-      }
+      // &:hover {
+      //   color: rgb(135, 132, 132);
+      // }
 
       &:active {
-        color: rgb(117, 141, 248);
+        color: rgb(72, 104, 247);
       }
 
-      &:visited {
-        color: rgb(117, 141, 248);
+      &_active {
+        color: rgb(72, 104, 247);
       }
     }
   }
@@ -119,6 +121,10 @@ body {
   &:active {
     background: rgb(72, 104, 247);
   }
+
+  &_disabled {
+    background: rgb(168, 182, 246);
+  }
 }
 
 .button_red {
@@ -130,20 +136,6 @@ body {
 
   &:active {
     background: rgba(243, 5, 5, 0.807);
-  }
-}
-
-.input_valid {
-  border: 2px rgb(199, 195, 195);
-  border-style: none none solid none;
-}
-
-.input_invalid {
-  border: 2px #ec5c5c;
-  border-style: none none solid none;
-
-  &::placeholder {
-    color: #ec5c5c;
   }
 }
 
@@ -160,4 +152,29 @@ body {
 
 .save-cancel-buttons {
   width: 4.5rem;
+  color: white;
+}
+
+.error {
+  max-width: 40rem;
+  margin: 1rem auto;
+  padding: 1rem;
+  background-color: #f4c7c7;
+  color: #3e0505;
+}
+
+.confirmation {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.fallback-text {
+  text-align: center;
+}
+
+.invalid-text {
+  margin-top: 0.5rem;
+  color: rgba(237, 65, 65, 0.807);
 }

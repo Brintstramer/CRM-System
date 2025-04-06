@@ -1,68 +1,131 @@
 import NewTask from "./components/NewTask";
 import Tabs from "./components/Tabs";
 import TaskList from "./components/TaskList";
-import { tasks } from "./data/tasks";
-import { use, useState } from "react";
+import Error from "./components/Error";
+import { useEffect, useState } from "react";
+import {
+  fetchTasks,
+  addNewTask,
+  deleteTask,
+  changeTaskStatus,
+  changeTaskTitle,
+} from "./http.js";
 
 export default function App() {
-  const [enteredNewTask, setEnteredNewTask] = useState("");
-  const [taskList, setTaskList] = useState(tasks);
-  const [isInvalidTask, setIsInvalidTask] = useState(false);
+  const [taskList, setTaskList] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
+  const [error, setError] = useState();
+  const [valueTask, setValueTask] = useState("");
+  const [editingTaskTitle, setEditingTaskTitle] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [tasksNumber, setTasksNumber] = useState({
+    all: 0,
+    inWork: 0,
+    completed: 0,
+  });
 
-  const newTaskInvalid = isInvalidTask && enteredNewTask === "";
-  let checkedTasks;
+  useEffect(() => {
+    fetchFilteredTaskList();
+  }, []);
 
-  function handleInputChangeNewTask(event) {
-    setEnteredNewTask(event.target.value);
+  async function fetchFilteredTaskList(filter) {
+    setIsFetching(true);
+
+    try {
+      const tasks = await fetchTasks(filter);
+      setTaskList(tasks.data);
+
+      setIsFetching(false);
+
+      const { all, inWork, completed } = await tasks.info;
+      setTasksNumber({ all, inWork, completed });
+    } catch (error) {
+      setError({
+        message: error.message || "Не получилось загрузить список задач.",
+      });
+    }
+
+    setIsFetching(false);
   }
 
-  function addTask(enteredNewTask) {
-    if (enteredNewTask === "") {
-      setIsInvalidTask(true);
-    } else {
-      setTaskList((prevTaskList) => {
-        return [{ taskText: enteredNewTask }, ...prevTaskList];
+  async function handleAddNewTask(valueTask) {
+    try {
+      await addNewTask(valueTask);
+      await fetchFilteredTaskList(filter);
+      setValueTask("");
+    } catch (error) {
+      setError({
+        message: error.message || "Не получилось создать новую задачу.",
       });
     }
   }
 
-  function handleTabAll(event) {
-    setTaskList(tasks);
-    console.log(event);
+  async function handleDeleteTask(id) {
+    try {
+      await deleteTask(id);
+
+      await fetchFilteredTaskList(filter);
+    } catch (error) {
+      setError({
+        message: error.message || "Не получилось удалить задачу.",
+      });
+    }
   }
 
-  function handleTabInWork() {
-    setTaskList(taskList.filter((task) => !task.state));
+  async function handleChangeTaskStatus(id, filter) {
+    try {
+      await changeTaskStatus(id);
+      await fetchFilteredTaskList(filter);
+    } catch (error) {
+      setError({
+        message: error.message || "Не получилось изменить статус задачи.",
+      });
+    }
   }
 
-  function handleTabDone(event) {
-    setTaskList(taskList.filter((task) => task.state));
-    console.log(event);
-  }
-
-  function handleCheckboxChange(value, index) {
-    taskList[index].state = value.target.checked;
-
-    setTaskList(taskList);
+  async function handleChangeTaskTitle(id, title, filter) {
+    try {
+      await changeTaskTitle(id, title);
+      await fetchFilteredTaskList(filter);
+    } catch (error) {
+      setError({
+        message: error.message || "Не получилось изменить текст задачи.",
+      });
+    }
   }
 
   return (
     <div className="app">
       <NewTask
-        invalid={newTaskInvalid}
-        onChange={handleInputChangeNewTask}
-        onClick={addTask}
-        enteredNewTask={enteredNewTask}
+        handleAddNewTask={handleAddNewTask}
+        valueTask={valueTask}
+        setValueTask={setValueTask}
       >
         Создать
       </NewTask>
       <Tabs
-        checkedTasks={checkedTasks}
-        onHandleTabAll={handleTabAll}
-        onHandleTabInWork={handleTabInWork}
-        onHandleTabDone={handleTabDone}
+        filterTaskList={fetchFilteredTaskList}
+        setFilter={setFilter}
+        filter={filter}
+        tasksNumber={tasksNumber}
       />
-      <TaskList taskList={taskList} onCheckboxChange={handleCheckboxChange} />
+      {error && (
+        <Error title="Пу-пу-пу, надо подумать..." message={error.message} />
+      )}
+      {!error && (
+        <TaskList
+          taskList={taskList}
+          handleChangeTaskStatus={handleChangeTaskStatus}
+          isLoading={isFetching}
+          loadingText="Загрузка списка задач..."
+          fallbackText="У вас нет задач."
+          onDeleteClick={handleDeleteTask}
+          filter={filter}
+          handleChangeTaskTitle={handleChangeTaskTitle}
+          editingTaskTitle={editingTaskTitle}
+          setEditingTaskTitle={setEditingTaskTitle}
+        />
+      )}
     </div>
   );
 }
