@@ -9,6 +9,7 @@
 .checkbox-label {
   padding-left: 1rem;
   cursor: pointer;
+  max-width: 15rem;
 }
 
 .checkbox-input {

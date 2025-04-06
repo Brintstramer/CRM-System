@@ -3,47 +3,45 @@ import deleteIcon from "../assets/deleteIcon.svg";
 import "../assets/checkbox.css";
 import { useState } from "react";
 
-export default function Task({ taskList, taskText, onCheckboxChange, index }) {
-  const [editingTaskText, setEditingTaskText] = useState(taskText);
+export default function Task({
+  task,
+  handleChangeTaskStatus,
+  handleChangeTaskTitle,
+  onDeleteClick,
+  filter,
+  editingTaskTitle,
+  setEditingTaskTitle,
+}) {
   const [isEditing, setIsEditing] = useState(false);
-
-  let checkboxLabelClasses = "checkbox-label";
-
-  if (taskList[index].state) {
-    checkboxLabelClasses += " checked";
-  }
+  const [isInvalidEditingTask, setIsInvalidEditingTask] = useState(false);
 
   function handleEditClick() {
+    setEditingTaskTitle(task.title);
     setIsEditing(true);
-    // if (isEditing) {
-    // }
   }
 
-  function handleSaveClick() {
-    taskText = editingTaskText;
-    setIsEditing(false);
-  }
-
-  function handleChangeTaskText(event) {
-    setEditingTaskText(event.target.value);
-  }
-
-  let editableTaskText = (
-    <label className={checkboxLabelClasses} htmlFor={taskText}>
-      {taskText}
+  let editableTaskTitle = (
+    <label
+      className={`checkbox-label ${task.isDone && "checked"}`}
+      htmlFor={task.id}
+    >
+      {task.title}
     </label>
   );
   let taskButtons = (
     <div className="task-buttons">
       <button
-        className="app__task-list__task__button button_blue"
+        disabled={task.isDone && true}
+        className={`app__task-list__task__button ${
+          task.isDone ? "button_blue_disabled" : "button_blue"
+        }`}
         onClick={handleEditClick}
       >
         <img src={editIcon} alt="editing icon" width="21px" height="21px" />
       </button>
       <button
         className="app__task-list__task__button button_red"
-        onClick={handleDeleteTask}
+        onClick={() => onDeleteClick(task.id)}
       >
         <img src={deleteIcon} alt="deletion icon" width="16px" height="16px" />
       </button>
@@ -51,44 +49,62 @@ export default function Task({ taskList, taskText, onCheckboxChange, index }) {
   );
 
   if (isEditing) {
-    editableTaskText = (
+    editableTaskTitle = (
       <input
         className="editable-input"
         type="text"
-        value={editingTaskText}
-        onChange={handleChangeTaskText}
         autoFocus
+        value={editingTaskTitle}
+        onChange={(event) => {
+          setEditingTaskTitle(event.target.value);
+        }}
       />
     );
     taskButtons = (
       <div className="task-buttons">
         <button
           className="app__task-list__task__button button_blue save-cancel-buttons"
-          onClick={handleSaveClick}
+          onClick={() => {
+            if (editingTaskTitle.length < 2 || editingTaskTitle.length > 64) {
+              setIsInvalidEditingTask(true);
+            } else {
+              handleChangeTaskTitle(task.id, editingTaskTitle);
+              setIsEditing(false);
+            }
+          }}
         >
           Cохранить
         </button>
-        <button className="app__task-list__task__button button_red save-cancel-buttons">
+        <button
+          className="app__task-list__task__button button_red save-cancel-buttons"
+          onClick={() => setIsEditing(false)}
+        >
           Отмена
         </button>
       </div>
     );
   }
 
-  function handleDeleteTask() {}
-
   return (
-    <div className="app__task-list__task">
-      <div className="checkbox">
-        <input
-          className="checkbox-input"
-          type="checkbox"
-          id={taskText}
-          onChange={(event) => onCheckboxChange(event, index)}
-        />
-        {editableTaskText}
+    <>
+      <div className="app__task-list__task">
+        <div className="checkbox">
+          <input
+            className="checkbox-input"
+            type="checkbox"
+            checked={task.isDone}
+            id={task.id}
+            onChange={() => handleChangeTaskStatus(task.id, filter)}
+          />
+          {editableTaskTitle}
+        </div>
+        {taskButtons}
       </div>
-      {taskButtons}
-    </div>
+      {isInvalidEditingTask && (
+        <p className="invalid-text">
+          Введите не менее 2 и не более 64 символов
+        </p>
+      )}
+    </>
   );
 }
