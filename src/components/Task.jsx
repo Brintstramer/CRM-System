@@ -9,10 +9,9 @@ export default function Task({
   handleChangeTaskTitle,
   onDeleteClick,
   filter,
-  editingTaskTitle,
-  setEditingTaskTitle,
 }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [editingTaskTitle, setEditingTaskTitle] = useState("");
   const [isInvalidEditingTask, setIsInvalidEditingTask] = useState(false);
 
   function handleEditClick() {
@@ -68,7 +67,8 @@ export default function Task({
             if (editingTaskTitle.length < 2 || editingTaskTitle.length > 64) {
               setIsInvalidEditingTask(true);
             } else {
-              handleChangeTaskTitle(task.id, editingTaskTitle);
+              handleChangeTaskTitle(task.id, editingTaskTitle, filter);
+              setIsInvalidEditingTask(false);
               setIsEditing(false);
             }
           }}

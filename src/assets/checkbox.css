@@ -10,6 +10,7 @@
   padding-left: 1rem;
   cursor: pointer;
   max-width: 15rem;
+  overflow-wrap: break-word;
 }
 
 .checkbox-input {
