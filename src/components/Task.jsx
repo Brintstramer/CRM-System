@@ -1,6 +1,5 @@
 import editIcon from "../assets/editIcon.svg";
 import deleteIcon from "../assets/deleteIcon.svg";
-import "../assets/checkbox.css";
 import { useState } from "react";
 
 export default function Task({
