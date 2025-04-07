@@ -9,8 +9,6 @@ export default function Task({
   handleChangeTaskTitle,
   onDeleteClick,
   filter,
-  // editingTaskTitle,
-  // setEditingTaskTitle,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editingTaskTitle, setEditingTaskTitle] = useState("");

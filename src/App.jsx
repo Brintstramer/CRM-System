@@ -16,7 +16,6 @@ export default function App() {
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState();
   const [valueTask, setValueTask] = useState("");
-  // const [editingTaskTitle, setEditingTaskTitle] = useState("");
   const [filter, setFilter] = useState("all");
   const [tasksNumber, setTasksNumber] = useState({
     all: 0,
@@ -121,8 +120,6 @@ export default function App() {
           onDeleteClick={handleDeleteTask}
           filter={filter}
           handleChangeTaskTitle={handleChangeTaskTitle}
-          // editingTaskTitle={editingTaskTitle}
-          // setEditingTaskTitle={setEditingTaskTitle}
         />
       )}
     </div>
