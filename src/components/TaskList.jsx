@@ -9,8 +9,8 @@ export default function TaskList({
   onDeleteClick,
   filter,
   handleChangeTaskTitle,
-  editingTaskTitle,
-  setEditingTaskTitle,
+  // editingTaskTitle,
+  // setEditingTaskTitle,
 }) {
   return (
     <>
@@ -28,8 +28,8 @@ export default function TaskList({
               onDeleteClick={onDeleteClick}
               filter={filter}
               handleChangeTaskTitle={handleChangeTaskTitle}
-              editingTaskTitle={editingTaskTitle}
-              setEditingTaskTitle={setEditingTaskTitle}
+              // editingTaskTitle={editingTaskTitle}
+              // setEditingTaskTitle={setEditingTaskTitle}
             />
           ))}
         </ul>

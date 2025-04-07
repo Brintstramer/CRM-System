@@ -11,8 +11,8 @@ body {
 }
 
 .app {
-  width: 28rem;
-  height: 42rem;
+  min-width: 30rem;
+  height: 100%;
   margin-top: 5rem;
   padding: 2rem;
   background: rgb(255 255 255 / 94%);
@@ -177,4 +177,10 @@ body {
 .invalid-text {
   margin-top: 0.5rem;
   color: rgba(237, 65, 65, 0.807);
+}
+
+@media (max-width: 767px) {
+  .app {
+    min-width: 15rem;
+  }
 }

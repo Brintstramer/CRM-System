@@ -16,7 +16,7 @@ export default function App() {
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState();
   const [valueTask, setValueTask] = useState("");
-  const [editingTaskTitle, setEditingTaskTitle] = useState("");
+  // const [editingTaskTitle, setEditingTaskTitle] = useState("");
   const [filter, setFilter] = useState("all");
   const [tasksNumber, setTasksNumber] = useState({
     all: 0,
@@ -48,9 +48,9 @@ export default function App() {
     setIsFetching(false);
   }
 
-  async function handleAddNewTask(valueTask) {
+  async function handleAddNewTask(title) {
     try {
-      await addNewTask(valueTask);
+      await addNewTask(title);
       await fetchFilteredTaskList(filter);
       setValueTask("");
     } catch (error) {
@@ -63,7 +63,6 @@ export default function App() {
   async function handleDeleteTask(id) {
     try {
       await deleteTask(id);
-
       await fetchFilteredTaskList(filter);
     } catch (error) {
       setError({
@@ -122,8 +121,8 @@ export default function App() {
           onDeleteClick={handleDeleteTask}
           filter={filter}
           handleChangeTaskTitle={handleChangeTaskTitle}
-          editingTaskTitle={editingTaskTitle}
-          setEditingTaskTitle={setEditingTaskTitle}
+          // editingTaskTitle={editingTaskTitle}
+          // setEditingTaskTitle={setEditingTaskTitle}
         />
       )}
     </div>
