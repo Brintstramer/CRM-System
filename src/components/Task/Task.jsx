@@ -2,6 +2,7 @@ import classes from "../Task/Task.module.css";
 import editIcon from "../../assets/editIcon.svg";
 import deleteIcon from "../../assets/deleteIcon.svg";
 import { useState } from "react";
+import Button from "../Button/Button.jsx";
 import {
   deleteTaskApi,
   changeTaskStatusApi,
@@ -82,21 +83,21 @@ export default function Task({
         </label>
       </div>
       <div className={classes.editDeleteButtons}>
-        <button
+        <Button
           disabled={task.isDone && true}
           className={classes.editButton}
           onClick={handleEditClick}
         >
           <img src={editIcon} alt="editing icon" width="21px" height="21px" />
-        </button>
-        <button className={classes.deleteButton} onClick={handleDeleteTask}>
+        </Button>
+        <Button className={classes.deleteButton} onClick={handleDeleteTask}>
           <img
             src={deleteIcon}
             alt="deletion icon"
             width="16px"
             height="16px"
           />
-        </button>
+        </Button>
       </div>
     </div>
   ) : (
@@ -117,13 +118,13 @@ export default function Task({
         </p>
       )}
       <div className={classes.saveCancelButtons}>
-        <button className={classes.saveButton}>Cохранить</button>
-        <button
+        <Button className={classes.saveButton}>Cохранить</Button>
+        <Button
           className={classes.cancelButton}
           onClick={() => setIsEditing(false)}
         >
           Отмена
-        </button>
+        </Button>
       </div>
     </form>
   );
