@@ -1,0 +1,44 @@
+.newTask {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input {
+  width: 20rem;
+  height: 2.7rem;
+  background-color: #ffffff00;
+  outline: none;
+  border: 2px rgb(199, 195, 195);
+  border-style: none none solid none;
+}
+
+.button {
+  width: 7.2rem;
+  height: 2.7rem;
+  color: white;
+  background: rgb(117, 141, 248);
+  border: 1px rgb(117, 141, 248) solid;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.button:hover {
+  background: rgb(100, 126, 244);
+}
+
+.button:active {
+  background: rgb(72, 104, 247);
+}
+
+.invalidText {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: rgba(237, 65, 65, 0.807);
+}
+
+@media (max-width: 767px) {
+  .input {
+    width: 12rem;
+  }
+}

@@ -1,6 +1,8 @@
+import classes from "../Error/Error.module.css";
+
 export default function Error({ title, message }) {
   return (
-    <div className="error">
+    <div className={classes.error}>
       <h2>{title}</h2>
       <p>{message}</p>
     </div>

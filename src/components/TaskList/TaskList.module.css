@@ -1,0 +1,9 @@
+.taskList {
+  list-style-type: none;
+}
+
+.center {
+  margin-top: 1rem;
+  text-align: center;
+  color: rgb(135, 132, 132);
+}

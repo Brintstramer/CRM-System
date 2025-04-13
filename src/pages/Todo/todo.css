@@ -1,0 +1,30 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  background: #000;
+  display: flex;
+  justify-content: center;
+}
+
+.todo {
+  min-width: 30rem;
+  height: 100%;
+  padding: 2rem;
+  background: rgb(255 255 255 / 94%);
+}
+
+.center {
+  margin-top: 1rem;
+  text-align: center;
+  color: rgb(135, 132, 132);
+}
+
+@media (max-width: 767px) {
+  .todo {
+    min-width: 10rem;
+  }
+}
