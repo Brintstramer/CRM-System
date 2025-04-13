@@ -2,7 +2,7 @@ import "./todo.css";
 import NewTask from "../../components/NewTask/NewTask.jsx";
 import Tabs from "../../components/Tabs/Tabs.jsx";
 import TaskList from "../../components/TaskList/TaskList.jsx";
-import Error from "../../components/error/Error.jsx";
+import Error from "../../components/Error/Error.jsx";
 import { useEffect, useState } from "react";
 import { fetchTasksApi } from "../../api/http.js";
 
