@@ -4,17 +4,12 @@ import deleteIcon from "../../assets/deleteIcon.svg";
 import { useState } from "react";
 import Button from "../Button/Button.jsx";
 import {
-  deleteTaskApi,
-  changeTaskStatusApi,
-  changeTaskTitleApi,
+  deleteTask,
+  changeTaskStatus,
+  changeTaskTitle,
 } from "../../api/http.js";
 
-export default function Task({
-  task,
-  fetchFilteredTaskList,
-  filter,
-  setError,
-}) {
+export default function Task({ task, fetchFilteredTaskList, setError }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editingTaskTitle, setEditingTaskTitle] = useState("");
   const [isInvalidEditingTask, setIsInvalidEditingTask] = useState(false);
@@ -26,8 +21,8 @@ export default function Task({
 
   async function handleDeleteTask() {
     try {
-      await deleteTaskApi(task.id);
-      await fetchFilteredTaskList(filter);
+      await deleteTask(task.id);
+      await fetchFilteredTaskList();
     } catch (error) {
       setError({
         message: error.message || "Не получилось удалить задачу.",
@@ -37,8 +32,8 @@ export default function Task({
 
   async function handleChangeTaskStatus() {
     try {
-      await changeTaskStatusApi(task.id, task.isDone);
-      await fetchFilteredTaskList(filter);
+      await changeTaskStatus(task.id, task.isDone);
+      await fetchFilteredTaskList();
     } catch (error) {
       setError({
         message: error.message || "Не получилось изменить статус задачи.",
@@ -52,12 +47,12 @@ export default function Task({
     try {
       if (editingTaskTitle.length < 2 || editingTaskTitle.length > 64) {
         setIsInvalidEditingTask(true);
-      } else {
-        await changeTaskTitleApi(task.id, editingTaskTitle);
-        await fetchFilteredTaskList(filter);
-        setIsInvalidEditingTask(false);
-        setIsEditing(false);
+        return;
       }
+      await changeTaskTitle(task.id, editingTaskTitle);
+      await fetchFilteredTaskList();
+      setIsInvalidEditingTask(false);
+      setIsEditing(false);
     } catch (error) {
       setError({
         message: error.message || "Не получилось изменить текст задачи.",

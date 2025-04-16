@@ -4,9 +4,9 @@ import Tabs from "../../components/Tabs/Tabs.jsx";
 import TaskList from "../../components/TaskList/TaskList.jsx";
 import Error from "../../components/Error/Error.jsx";
 import { useEffect, useState } from "react";
-import { fetchTasksApi } from "../../api/http.js";
+import { fetchTasks } from "../../api/http.js";
 
-export default function Todo() {
+export default function TodoPage() {
   const [taskList, setTaskList] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState("");
@@ -19,14 +19,14 @@ export default function Todo() {
 
   useEffect(() => {
     fetchFilteredTaskList();
-  }, []);
+  }, [filter]);
 
-  async function fetchFilteredTaskList(filter) {
+  async function fetchFilteredTaskList() {
     setIsFetching(true);
     setError("");
 
     try {
-      const tasks = await fetchTasksApi(filter);
+      const tasks = await fetchTasks(filter);
       setTaskList(tasks.data);
       setTasksNumber(tasks.info);
 
@@ -44,15 +44,9 @@ export default function Todo() {
     <div className="todo">
       <NewTask
         fetchFilteredTaskList={fetchFilteredTaskList}
-        filter={filter}
         setError={setError}
       />
-      <Tabs
-        fetchFilteredTaskList={fetchFilteredTaskList}
-        setFilter={setFilter}
-        filter={filter}
-        tasksNumber={tasksNumber}
-      />
+      <Tabs setFilter={setFilter} tasksNumber={tasksNumber} filter={filter} />
       {error && (
         <Error title="Пу-пу-пу, надо подумать..." message={error.message} />
       )}
@@ -63,7 +57,6 @@ export default function Todo() {
           isFetching={isFetching}
           loadingText="Загрузка списка задач..."
           fallbackText="Задачи закончились."
-          filter={filter}
           setError={setError}
         />
       )}
