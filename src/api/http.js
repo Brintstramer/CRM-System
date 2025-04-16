@@ -1,6 +1,6 @@
 const API = "https://easydev.club/api/v1/todos";
 
-export async function fetchTasksApi(filter) {
+export async function fetchTasks(filter) {
   try {
     const response = await fetch(`${API}?filter=${filter}`);
     const resData = await response.json();
@@ -10,23 +10,21 @@ export async function fetchTasksApi(filter) {
   }
 }
 
-export async function addNewTaskApi(title) {
+export async function addNewTask(title) {
   try {
-    const response = await fetch(API, {
+    await fetch(API, {
       method: "POST",
       body: JSON.stringify({ title }),
       headers: {
         "Content-Type": "application/json",
       },
     });
-
-    return response;
   } catch (error) {
     throw new Error("Не получилось создать задачу.");
   }
 }
 
-export async function deleteTaskApi(id) {
+export async function deleteTask(id) {
   try {
     await fetch(`${API}/${id}`, {
       method: "DELETE",
@@ -39,7 +37,7 @@ export async function deleteTaskApi(id) {
   }
 }
 
-export async function changeTaskStatusApi(id, status) {
+export async function changeTaskStatus(id, status) {
   try {
     await fetch(`${API}/${id}`, {
       method: "PUT",
@@ -53,16 +51,15 @@ export async function changeTaskStatusApi(id, status) {
   }
 }
 
-export async function changeTaskTitleApi(id, title) {
+export async function changeTaskTitle(id, title) {
   try {
-    const response = await fetch(`${API}/${id}`, {
+    await fetch(`${API}/${id}`, {
       method: "PUT",
       body: JSON.stringify({ title }),
       headers: {
         "Content-Type": "application/json",
       },
     });
-    return response;
   } catch (error) {
     throw new Error("Не получилось изменить задачу.");
   }

@@ -7,7 +7,6 @@ export default function TaskList({
   fallbackText,
   isFetching,
   loadingText,
-  filter,
   setError,
 }) {
   return (
@@ -22,7 +21,6 @@ export default function TaskList({
             <li key={task.id}>
               <Task
                 task={task}
-                filter={filter}
                 fetchFilteredTaskList={fetchFilteredTaskList}
                 setError={setError}
               />

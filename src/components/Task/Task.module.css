@@ -176,23 +176,23 @@
 .cancelButton {
   width: 6rem;
   height: 2.7rem;
-  border: 1px white solid;
+  border: 1px rgb(252, 151, 34) solid;
   border-radius: 0.5rem;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(238, 96, 96, 0.807);
-  color: white;
+  background: white;
+  color: rgb(252, 151, 34);
   transition: 0.2s;
 }
 
 .cancelButton:hover {
-  background: rgba(236, 69, 69, 0.807);
+  background: rgb(255, 243, 229);
 }
 
 .cancelButton:active {
-  background: rgba(249, 118, 118, 0.807);
+  background: rgb(254, 231, 206);
 }
 
 .invalidText {
@@ -200,13 +200,3 @@
   font-size: 0.8rem;
   color: rgba(237, 65, 65, 0.807);
 }
-
-/* @media (max-width: 767px) {
-  .label {
-    max-width: 10rem;
-  }
-
-  .editableInput {
-    max-width: 8rem;
-  }
-} */
