@@ -1,7 +1,8 @@
 import classes from "../TaskList/TaskList.module.css";
 import Task from "../Task/Task";
+import { TaskListProps } from "../../types/types";
 
-const TaskList: React.FC<{ taskList: [] }> = ({
+const TaskList: React.FC<TaskListProps> = ({
   fetchFilteredTaskList,
   taskList,
   fallbackText,

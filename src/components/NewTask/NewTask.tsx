@@ -1,12 +1,16 @@
 import { useState } from "react";
 import classes from "../NewTask/NewTask.module.css";
 import { addNewTask } from "../../api/http";
+import { NewTaskProps } from "../../types/types";
 
-export default function NewTask({ fetchFilteredTaskList, setError }) {
+const NewTask: React.FC<NewTaskProps> = ({
+  fetchFilteredTaskList,
+  setError,
+}) => {
   const [valueTask, setValueTask] = useState("");
   const [isInvalidTask, setIsInvalidTask] = useState(false);
 
-  async function handleAddNewTask(event) {
+  const handleAddNewTask = async (event: React.FormEvent) => {
     event.preventDefault();
 
     try {
@@ -20,10 +24,13 @@ export default function NewTask({ fetchFilteredTaskList, setError }) {
       setIsInvalidTask(false);
     } catch (error) {
       setError({
-        message: error.message || "Не получилось создать задачу.",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Не получилось создать задачу.",
       });
     }
-  }
+  };
 
   return (
     <>
@@ -48,4 +55,6 @@ export default function NewTask({ fetchFilteredTaskList, setError }) {
       )}
     </>
   );
-}
+};
+
+export default NewTask;

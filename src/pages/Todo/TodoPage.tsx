@@ -1,22 +1,17 @@
 import "./todo.css";
-import NewTask from "../../components/NewTask/NewTask.js";
-import Tabs from "../../components/Tabs/Tabs.jsx";
-import TaskList from "../../components/TaskList/TaskList.js";
-import Error from "../../components/Error/Error.jsx";
+import NewTask from "../../components/NewTask/NewTask";
+import Tabs from "../../components/Tabs/Tabs";
+import TaskList from "../../components/TaskList/TaskList";
+import ErrorComponent from "../../components/ErrorComponent/ErrorComponent";
 import { useEffect, useState } from "react";
-import { fetchTasks } from "../../api/http.js";
+import { fetchTasks } from "../../api/http";
+import { ErrorType, Filter, TaskType } from "../../types/types";
 
-type Task = {
-  id: string;
-  title: string;
-  isDone: boolean;
-};
-
-const TodoPage = () => {
-  const [taskList, setTaskList] = useState<Task[]>([]);
+const TodoPage: React.FC = () => {
+  const [taskList, setTaskList] = useState<TaskType[]>([]);
   const [isFetching, setIsFetching] = useState(false);
-  const [error, setError] = useState("");
-  const [filter, setFilter] = useState<string>("all");
+  const [error, setError] = useState<ErrorType>(null);
+  const [filter, setFilter] = useState<Filter>("all");
   const [tasksNumber, setTasksNumber] = useState({
     all: 0,
     inWork: 0,
@@ -27,9 +22,9 @@ const TodoPage = () => {
     fetchFilteredTaskList();
   }, [filter]);
 
-  async function fetchFilteredTaskList() {
+  const fetchFilteredTaskList = async () => {
     setIsFetching(true);
-    setError("");
+    setError(null);
 
     try {
       const tasks = await fetchTasks(filter);
@@ -39,12 +34,15 @@ const TodoPage = () => {
       setIsFetching(false);
     } catch (error) {
       setError({
-        message: error.message || "Не получилось загрузить список задач.",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Не получилось загрузить список задач.",
       });
 
       setIsFetching(false);
     }
-  }
+  };
 
   return (
     <div className="todo">
@@ -54,7 +52,10 @@ const TodoPage = () => {
       />
       <Tabs setFilter={setFilter} tasksNumber={tasksNumber} filter={filter} />
       {error && (
-        <Error title="Пу-пу-пу, надо подумать..." message={error.message} />
+        <ErrorComponent
+          title="Пу-пу-пу, надо подумать..."
+          message={error.message}
+        />
       )}
       {!error && (
         <TaskList
@@ -70,4 +71,4 @@ const TodoPage = () => {
   );
 };
 
-export default TodoPage();
+export default TodoPage;

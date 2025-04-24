@@ -2,14 +2,15 @@ import classes from "../Task/Task.module.css";
 import editIcon from "../../assets/editIcon.svg";
 import deleteIcon from "../../assets/deleteIcon.svg";
 import { useState } from "react";
-import Button from "../Button/Button.jsx";
-import {
-  deleteTask,
-  changeTaskStatus,
-  changeTaskTitle,
-} from "../../api/http.js";
+import Button from "../Button/Button";
+import { deleteTask, changeTaskStatus, changeTaskTitle } from "../../api/http";
+import { TaskProps } from "../../types/types";
 
-const Task: React.FC = ({ task, fetchFilteredTaskList, setError }) => {
+const Task: React.FC<TaskProps> = ({
+  task,
+  fetchFilteredTaskList,
+  setError,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingTaskTitle, setEditingTaskTitle] = useState("");
   const [isInvalidEditingTask, setIsInvalidEditingTask] = useState(false);
@@ -25,7 +26,10 @@ const Task: React.FC = ({ task, fetchFilteredTaskList, setError }) => {
       await fetchFilteredTaskList();
     } catch (error) {
       setError({
-        message: error.message || "Не получилось удалить задачу.",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Не получилось удалить задачу.",
       });
     }
   };
@@ -36,12 +40,15 @@ const Task: React.FC = ({ task, fetchFilteredTaskList, setError }) => {
       await fetchFilteredTaskList();
     } catch (error) {
       setError({
-        message: error.message || "Не получилось изменить статус задачи.",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Не получилось изменить статус задачи.",
       });
     }
   };
 
-  const handleChangeTaskTitle = async (event) => {
+  const handleChangeTaskTitle = async (event: React.FormEvent) => {
     event.preventDefault();
 
     try {
@@ -55,7 +62,10 @@ const Task: React.FC = ({ task, fetchFilteredTaskList, setError }) => {
       setIsEditing(false);
     } catch (error) {
       setError({
-        message: error.message || "Не получилось изменить текст задачи.",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Не получилось изменить текст задачи.",
       });
     }
   };
@@ -67,12 +77,12 @@ const Task: React.FC = ({ task, fetchFilteredTaskList, setError }) => {
           className={classes.input}
           type="checkbox"
           checked={task.isDone}
-          id={task.id}
+          id={typeof task.id === "number" ? String(task.id) : undefined}
           onChange={handleChangeTaskStatus}
         />
         <label
           className={task.isDone ? classes.checkedLabel : classes.label}
-          htmlFor={task.id}
+          htmlFor={typeof task.id === "number" ? String(task.id) : undefined}
         >
           {task.title}
         </label>

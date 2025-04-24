@@ -1,6 +1,7 @@
+import { TabsProps } from "../../types/types";
 import classes from "../Tabs/Tabs.module.css";
 
-export default function Tabs({ setFilter, filter, tasksNumber }) {
+const Tabs: React.FC<TabsProps> = ({ setFilter, filter, tasksNumber }) => {
   return (
     <nav className={classes.tabs}>
       <a
@@ -19,4 +20,6 @@ export default function Tabs({ setFilter, filter, tasksNumber }) {
       >{`сделано (${tasksNumber.completed})`}</a>
     </nav>
   );
-}
+};
+
+export default Tabs;

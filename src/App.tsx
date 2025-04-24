@@ -1,5 +1,7 @@
 import TodoPage from "./pages/Todo/TodoPage";
 
-export default function App() {
+const App = () => {
   return <TodoPage />;
-}
+};
+
+export default App;
