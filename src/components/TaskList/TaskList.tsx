@@ -1,6 +1,15 @@
 import classes from "../TaskList/TaskList.module.css";
 import Task from "../Task/Task";
-import { TaskListProps } from "../../types/types";
+import { TaskType, ErrorType } from "../../types/types";
+
+type TaskListProps = {
+  fetchFilteredTaskList: () => Promise<void>;
+  taskList: TaskType[];
+  fallbackText: string;
+  isFetching: boolean;
+  loadingText: string;
+  setError: (error: ErrorType) => void;
+};
 
 const TaskList: React.FC<TaskListProps> = ({
   fetchFilteredTaskList,

@@ -1,4 +1,9 @@
-import { ButtonProps } from "../../types/types";
+type ButtonProps = {
+  disabled?: boolean;
+  className: string;
+  onClick?: () => Promise<void> | void;
+  children: React.ReactNode;
+};
 
 const Button: React.FC<ButtonProps> = ({
   disabled,

@@ -1,7 +1,12 @@
 import { useState } from "react";
 import classes from "../NewTask/NewTask.module.css";
 import { addNewTask } from "../../api/http";
-import { NewTaskProps } from "../../types/types";
+import { ErrorMessage, ErrorType } from "../../types/types";
+
+type NewTaskProps = {
+  fetchFilteredTaskList: () => Promise<void>;
+  setError: (error: ErrorType) => void;
+};
 
 const NewTask: React.FC<NewTaskProps> = ({
   fetchFilteredTaskList,
@@ -13,21 +18,20 @@ const NewTask: React.FC<NewTaskProps> = ({
   const handleAddNewTask = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    if (valueTask.trim().length < 2 || valueTask.trim().length > 64) {
+      setIsInvalidTask(true);
+      return;
+    }
+
     try {
-      if (valueTask.trim().length < 2 || valueTask.trim().length > 64) {
-        setIsInvalidTask(true);
-        return;
-      }
       await addNewTask(valueTask);
       await fetchFilteredTaskList();
       setValueTask("");
       setIsInvalidTask(false);
-    } catch (error) {
+    } catch (error: unknown) {
       setError({
         message:
-          error instanceof Error
-            ? error.message
-            : "Не получилось создать задачу.",
+          error instanceof Error ? error.message : ErrorMessage.FailedNewTask,
       });
     }
   };

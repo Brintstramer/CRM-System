@@ -1,4 +1,10 @@
-import { Filter, ResponseData, TaskType, TasksNumber } from "../types/types";
+import {
+  Filter,
+  ResponseData,
+  TaskType,
+  TasksNumber,
+  ErrorMessage,
+} from "../types/types";
 
 const BASE_URL = "https://easydev.club/api/v1/todos";
 
@@ -8,21 +14,16 @@ export const fetchTasks = async (
   try {
     const response = await fetch(`${BASE_URL}?filter=${filter}`);
 
-    // if (!response.ok) {
-    //   throw new Error("Не получилось загрузить список задач.");
-    // }
-
     const resData: ResponseData<TaskType, TasksNumber> = await response.json();
 
     return resData;
-  } catch (error) {
-    throw new Error("Не получилось загрузить список задач.");
+  } catch (error: unknown) {
+    throw new Error(ErrorMessage.FailedTaskList);
   }
 };
 
 export const addNewTask = async (title: string) => {
   try {
-    // const response =
     await fetch(BASE_URL, {
       method: "POST",
       body: JSON.stringify({ title }),
@@ -30,12 +31,8 @@ export const addNewTask = async (title: string) => {
         "Content-Type": "application/json",
       },
     });
-
-    // const resData = await response.json();
-    // return resData;
   } catch (error: unknown) {
-    if (error instanceof Error)
-      throw new Error("Не получилось создать задачу.");
+    if (error instanceof Error) throw new Error(ErrorMessage.FailedNewTask);
   }
 };
 
@@ -48,7 +45,7 @@ export const deleteTask = async (id: number) => {
       },
     });
   } catch (error: unknown) {
-    if (error instanceof Error) throw new Error("Не получилсь удалить задачу.");
+    if (error instanceof Error) throw new Error(ErrorMessage.FailedDeleteTask);
   }
 };
 
@@ -63,7 +60,7 @@ export const changeTaskStatus = async (id: number, status: boolean) => {
     });
   } catch (error: unknown) {
     if (error instanceof Error)
-      throw new Error("Не получилось изменить статус задачи.");
+      throw new Error(ErrorMessage.FailedChangeStatusTask);
   }
 };
 
@@ -77,7 +74,6 @@ export const changeTaskTitle = async (id: number, title: string) => {
       },
     });
   } catch (error: unknown) {
-    if (error instanceof Error)
-      throw new Error("Не получилось изменить задачу.");
+    if (error instanceof Error) throw new Error(ErrorMessage.FailedChangeTask);
   }
 };

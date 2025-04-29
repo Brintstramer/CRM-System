@@ -11,8 +11,6 @@ export type TasksNumber = {
   completed: number;
 };
 
-export type Filter = "all" | "inWork" | "completed";
-
 export type ErrorType = { message: string } | null;
 
 export type ResponseData<T, N> = {
@@ -23,37 +21,16 @@ export type ResponseData<T, N> = {
   };
 };
 
-export type NewTaskProps = {
-  fetchFilteredTaskList: () => Promise<void>;
-  setError: (error: ErrorType) => void;
-};
+export enum Filter {
+  All = "all",
+  InWork = "inWork",
+  Completed = "completed",
+}
 
-export type TabsProps = {
-  setFilter: (filter: Filter) => void;
-  filter: string;
-  tasksNumber: TasksNumber;
-};
-
-export type ErrorComponentProps = { title: string; message: string };
-
-export type TaskListProps = {
-  fetchFilteredTaskList: () => Promise<void>;
-  taskList: TaskType[];
-  fallbackText: string;
-  isFetching: boolean;
-  loadingText: string;
-  setError: (error: ErrorType) => void;
-};
-
-export type TaskProps = {
-  task: TaskType;
-  fetchFilteredTaskList: () => Promise<void>;
-  setError: (error: ErrorType) => void;
-};
-
-export type ButtonProps = {
-  disabled?: boolean;
-  className: string;
-  onClick?: () => Promise<void> | void;
-  children: React.ReactNode;
-};
+export enum ErrorMessage {
+  FailedTaskList = "Не получилось загрузить список задач.",
+  FailedNewTask = "Не получилось создать задачу.",
+  FailedDeleteTask = "Не получилсь удалить задачу.",
+  FailedChangeStatusTask = "Не получилось изменить статус задачи.",
+  FailedChangeTask = "Не получилось изменить задачу.",
+}

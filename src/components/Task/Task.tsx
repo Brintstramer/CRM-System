@@ -4,7 +4,13 @@ import deleteIcon from "../../assets/deleteIcon.svg";
 import { useState } from "react";
 import Button from "../Button/Button";
 import { deleteTask, changeTaskStatus, changeTaskTitle } from "../../api/http";
-import { TaskProps } from "../../types/types";
+import { TaskType, ErrorType, ErrorMessage } from "../../types/types";
+
+type TaskProps = {
+  task: TaskType;
+  fetchFilteredTaskList: () => Promise<void>;
+  setError: (error: ErrorType) => void;
+};
 
 const Task: React.FC<TaskProps> = ({
   task,
@@ -24,12 +30,12 @@ const Task: React.FC<TaskProps> = ({
     try {
       await deleteTask(task.id);
       await fetchFilteredTaskList();
-    } catch (error) {
+    } catch (error: unknown) {
       setError({
         message:
           error instanceof Error
             ? error.message
-            : "Не получилось удалить задачу.",
+            : ErrorMessage.FailedDeleteTask,
       });
     }
   };
@@ -38,12 +44,12 @@ const Task: React.FC<TaskProps> = ({
     try {
       await changeTaskStatus(task.id, task.isDone);
       await fetchFilteredTaskList();
-    } catch (error) {
+    } catch (error: unknown) {
       setError({
         message:
           error instanceof Error
             ? error.message
-            : "Не получилось изменить статус задачи.",
+            : ErrorMessage.FailedChangeStatusTask,
       });
     }
   };
@@ -60,12 +66,12 @@ const Task: React.FC<TaskProps> = ({
       await fetchFilteredTaskList();
       setIsInvalidEditingTask(false);
       setIsEditing(false);
-    } catch (error) {
+    } catch (error: unknown) {
       setError({
         message:
           error instanceof Error
             ? error.message
-            : "Не получилось изменить текст задачи.",
+            : ErrorMessage.FailedChangeTask,
       });
     }
   };

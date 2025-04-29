@@ -1,5 +1,6 @@
-import { ErrorComponentProps } from "../../types/types";
 import classes from "../ErrorComponent/ErrorComponent.module.css";
+
+type ErrorComponentProps = { title: string; message: string };
 
 const ErrorComponent: React.FC<ErrorComponentProps> = ({ title, message }) => {
   return (
