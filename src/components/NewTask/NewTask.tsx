@@ -1,3 +1,5 @@
+import { Button, Form, Input } from "antd";
+
 import { useState } from "react";
 import classes from "../NewTask/NewTask.module.css";
 import { addNewTask } from "../../api/http";
@@ -13,21 +15,21 @@ const NewTask: React.FC<NewTaskProps> = ({
   setError,
 }) => {
   const [valueTask, setValueTask] = useState("");
-  const [isInvalidTask, setIsInvalidTask] = useState(false);
+  // const [isInvalidTask, setIsInvalidTask] = useState(false);
 
   const handleAddNewTask = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (valueTask.trim().length < 2 || valueTask.trim().length > 64) {
-      setIsInvalidTask(true);
-      return;
-    }
+    // if (valueTask.trim().length < 2 || valueTask.trim().length > 64) {
+    //   setIsInvalidTask(true);
+    //   return;
+    // }
 
     try {
       await addNewTask(valueTask);
       await fetchFilteredTaskList();
       setValueTask("");
-      setIsInvalidTask(false);
+      // setIsInvalidTask(false);
     } catch (error: unknown) {
       setError({
         message:
@@ -38,25 +40,27 @@ const NewTask: React.FC<NewTaskProps> = ({
 
   return (
     <>
-      <form
+      <Form
         name="newTask"
         className={classes.newTask}
-        onSubmit={handleAddNewTask}
+        onFinish={handleAddNewTask}
       >
-        <input
-          type="text"
-          className={classes.input}
-          placeholder="Напишите задачу..."
-          value={valueTask}
-          onChange={(event) => setValueTask(event.target.value)}
-        />
-        <button className={classes.button}>Создать</button>
-      </form>
-      {isInvalidTask && (
+        <Form.Item>
+          <Input
+            placeholder="Напишите задачу..."
+            value={valueTask}
+            onChange={(event) => setValueTask(event.target.value)}
+          />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary">Создать</Button>
+        </Form.Item>
+      </Form>
+      {/* {isInvalidTask && (
         <p className={classes.invalidText}>
           Введите не менее 2 и не более 64 символов
         </p>
-      )}
+      )} */}
     </>
   );
 };
