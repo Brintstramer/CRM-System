@@ -1,4 +1,4 @@
-import "./home.css";
+import "./Нome.css";
 import TodoPage from "../Todo/Todo";
 
 const HomePage = () => {
