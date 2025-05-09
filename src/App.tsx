@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import TodoPage from "./pages/Todo/Todo";
+import TodoPage from "./pages/Todo";
 import RootLayout from "./pages/Root";
 import ProfilePage from "./pages/Profile";
-import HomePage from "./pages/Home/Home";
+import HomePage from "./pages/Home";
 import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([

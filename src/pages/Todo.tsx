@@ -1,17 +1,11 @@
-import "./Todo.css";
-import NewTask from "../../components/NewTask";
-import TabsComponent from "../../components/TabsComponent";
-import TaskList from "../../components/TaskList/TaskList";
-import ErrorComponent from "../../components/ErrorComponent";
+import NewTask from "../components/NewTask";
+import TabsComponent from "../components/TabsComponent";
+import TaskList from "../components/TaskList/TaskList";
+import ErrorComponent from "../components/ErrorComponent";
 import { useEffect, useRef, useState } from "react";
-import { fetchTasks } from "../../api/http";
-import {
-  ErrorMessage,
-  ErrorType,
-  TasksNumber,
-  TaskType,
-} from "../../types/types";
-import { RefreshContext } from "../../store/RefreshContext";
+import { fetchTasks } from "../api/http";
+import { ErrorMessage, ErrorType, TasksNumber, TaskType } from "../types/types";
+import { RefreshContext } from "../store/RefreshContext";
 
 const TodoPage: React.FC = () => {
   const [taskList, setTaskList] = useState<TaskType[]>([]);
@@ -72,7 +66,14 @@ const TodoPage: React.FC = () => {
     <RefreshContext.Provider
       value={{ pauseRefresh: stopInterval, resumeRefresh: startInterval }}
     >
-      <div className="todo">
+      <div
+        style={{
+          maxWidth: "35rem",
+          height: "100%",
+          paddingTop: "2rem",
+          margin: "0 auto",
+        }}
+      >
         <NewTask
           fetchFilteredTaskList={fetchFilteredTaskList}
           setError={setError}
