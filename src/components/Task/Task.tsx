@@ -1,10 +1,13 @@
-import classes from "../Task/Task.module.css";
+import "../Task/Task.css";
 import editIcon from "../../assets/editIcon.svg";
 import deleteIcon from "../../assets/deleteIcon.svg";
 import { useState } from "react";
-import Button from "../Button/Button";
 import { deleteTask, changeTaskStatus, changeTaskTitle } from "../../api/http";
 import { TaskType, ErrorType, ErrorMessage } from "../../types/types";
+import { Form, Space, Button, Checkbox, Typography } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import { useForm } from "antd/es/form/Form";
+import { useRefresh } from "../../store/RefreshContext";
 
 type TaskProps = {
   task: TaskType;
@@ -17,13 +20,20 @@ const Task: React.FC<TaskProps> = ({
   fetchFilteredTaskList,
   setError,
 }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingTaskTitle, setEditingTaskTitle] = useState("");
-  const [isInvalidEditingTask, setIsInvalidEditingTask] = useState(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [form] = useForm();
+  const { Text } = Typography;
+  const { pauseRefresh, resumeRefresh } = useRefresh();
 
   const handleEditClick = () => {
-    setEditingTaskTitle(task.title);
+    form.setFieldsValue({ editingTask: task.title });
     setIsEditing(true);
+    pauseRefresh();
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    resumeRefresh();
   };
 
   const handleDeleteTask = async () => {
@@ -54,18 +64,13 @@ const Task: React.FC<TaskProps> = ({
     }
   };
 
-  const handleChangeTaskTitle = async (event: React.FormEvent) => {
-    event.preventDefault();
-
+  const handleChangeTaskTitle = async () => {
     try {
-      if (editingTaskTitle.length < 2 || editingTaskTitle.length > 64) {
-        setIsInvalidEditingTask(true);
-        return;
-      }
-      await changeTaskTitle(task.id, editingTaskTitle);
+      const title = form.getFieldValue("editingTask");
+      await changeTaskTitle(task.id, title);
       await fetchFilteredTaskList();
-      setIsInvalidEditingTask(false);
       setIsEditing(false);
+      resumeRefresh();
     } catch (error: unknown) {
       setError({
         message:
@@ -76,32 +81,61 @@ const Task: React.FC<TaskProps> = ({
     }
   };
 
-  return !isEditing ? (
-    <div className={classes.task}>
-      <div className={classes.checkbox}>
-        <input
-          className={classes.input}
-          type="checkbox"
-          checked={task.isDone}
-          id={typeof task.id === "number" ? String(task.id) : undefined}
-          onChange={handleChangeTaskStatus}
-        />
-        <label
-          className={task.isDone ? classes.checkedLabel : classes.label}
-          htmlFor={typeof task.id === "number" ? String(task.id) : undefined}
+  if (isEditing) {
+    return (
+      <Form
+        form={form}
+        onFinish={handleChangeTaskTitle}
+        style={{ marginTop: "1rem" }}
+      >
+        <Form.Item
+          name="editingTask"
+          rules={[
+            {
+              required: true,
+              message: "Введите не менее 2 и не более 64 символов",
+            },
+            {
+              min: 2,
+              max: 64,
+              message: "Введите не менее 2 и не более 64 символов",
+            },
+          ]}
         >
-          {task.title}
-        </label>
-      </div>
-      <div className={classes.editDeleteButtons}>
+          <TextArea autoFocus rows={3} />
+        </Form.Item>
+        <Space>
+          <Button color="orange" variant="solid" htmlType="submit">
+            Cохранить
+          </Button>
+          <Button color="orange" variant="outlined" onClick={handleCancelEdit}>
+            Отмена
+          </Button>
+        </Space>
+      </Form>
+    );
+  }
+
+  return (
+    <div className="task">
+      <Checkbox checked={task.isDone} onChange={handleChangeTaskStatus}>
+        <Text delete={task.isDone}>{task.title}</Text>
+      </Checkbox>
+      <Space>
         <Button
+          style={{ height: "2.7rem", width: "3rem" }}
+          type="primary"
           disabled={task.isDone && true}
-          className={classes.editButton}
           onClick={handleEditClick}
         >
           <img src={editIcon} alt="editing icon" width="21px" height="21px" />
         </Button>
-        <Button className={classes.deleteButton} onClick={handleDeleteTask}>
+        <Button
+          style={{ height: "2.7rem", width: "3rem" }}
+          type="primary"
+          danger
+          onClick={handleDeleteTask}
+        >
           <img
             src={deleteIcon}
             alt="deletion icon"
@@ -109,35 +143,8 @@ const Task: React.FC<TaskProps> = ({
             height="16px"
           />
         </Button>
-      </div>
+      </Space>
     </div>
-  ) : (
-    <form
-      name="editingTask"
-      className={classes.form}
-      onSubmit={handleChangeTaskTitle}
-    >
-      <textarea
-        className={classes.textarea}
-        autoFocus
-        value={editingTaskTitle}
-        onChange={(event) => setEditingTaskTitle(event.target.value)}
-      ></textarea>
-      {isInvalidEditingTask && (
-        <p className={classes.invalidText}>
-          Введите не менее 2 и не более 64 символов
-        </p>
-      )}
-      <div className={classes.saveCancelButtons}>
-        <Button className={classes.saveButton}>Cохранить</Button>
-        <Button
-          className={classes.cancelButton}
-          onClick={() => setIsEditing(false)}
-        >
-          Отмена
-        </Button>
-      </div>
-    </form>
   );
 };
 

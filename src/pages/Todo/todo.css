@@ -1,26 +1,8 @@
-* {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: "Montserrat", sans-serif;
-  background: #000;
-  display: flex;
-  justify-content: center;
-}
-
 .todo {
-  min-width: 30rem;
+  max-width: 35rem;
   height: 100%;
-  padding: 2rem;
-  background: rgb(255 255 255 / 94%);
-}
-
-.center {
-  margin-top: 1rem;
-  text-align: center;
-  color: rgb(135, 132, 132);
+  padding-top: 2rem;
+  margin: 0 auto;
 }
 
 @media (max-width: 767px) {

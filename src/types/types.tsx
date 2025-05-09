@@ -21,11 +21,11 @@ export type ResponseData<T, N> = {
   };
 };
 
-export enum Filter {
-  All = "all",
-  InWork = "inWork",
-  Completed = "completed",
-}
+// export enum Filter {
+//   All = "all",
+//   InWork = "inWork",
+//   Completed = "completed",
+// }
 
 export enum ErrorMessage {
   FailedTaskList = "Не получилось загрузить список задач.",
