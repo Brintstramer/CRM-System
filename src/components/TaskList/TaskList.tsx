@@ -1,3 +1,4 @@
+import React from "react";
 import classes from "../TaskList/TaskList.module.css";
 import Task from "../Task/Task";
 import { TaskType, ErrorType } from "../../types/types";
@@ -42,4 +43,4 @@ const TaskList: React.FC<TaskListProps> = ({
   );
 };
 
-export default TaskList;
+export default React.memo(TaskList);

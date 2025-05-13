@@ -2,7 +2,7 @@ import NewTask from "../components/NewTask";
 import TabsComponent from "../components/TabsComponent";
 import TaskList from "../components/TaskList/TaskList";
 import ErrorComponent from "../components/ErrorComponent";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchTasks } from "../api/http";
 import { ErrorMessage, ErrorType, TasksNumber, TaskType } from "../types/types";
 import { RefreshContext } from "../store/RefreshContext";
@@ -20,29 +20,7 @@ const TodoPage: React.FC = () => {
 
   const intervalRef = useRef<number | null>(null);
 
-  const startInterval = () => {
-    stopInterval();
-
-    intervalRef.current = setInterval(() => fetchFilteredTaskList(), 5000);
-  };
-
-  const stopInterval = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-
-      intervalRef.current = null;
-    }
-  };
-
-  useEffect(() => {
-    fetchFilteredTaskList();
-
-    startInterval();
-
-    return () => stopInterval();
-  }, [filter]);
-
-  const fetchFilteredTaskList = async () => {
+  const fetchFilteredTaskList = useCallback(async () => {
     setIsFetching(true);
     setError(null);
 
@@ -50,17 +28,33 @@ const TodoPage: React.FC = () => {
       const tasks = await fetchTasks(filter);
       setTaskList(tasks.data);
       setTasksNumber(tasks.info);
-
-      setIsFetching(false);
     } catch (error: unknown) {
       setError({
         message:
           error instanceof Error ? error.message : ErrorMessage.FailedTaskList,
       });
-
+    } finally {
       setIsFetching(false);
     }
-  };
+  }, [filter]);
+
+  const stopInterval = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
+
+  const startInterval = useCallback(() => {
+    stopInterval();
+    intervalRef.current = setInterval(() => fetchFilteredTaskList(), 5000);
+  }, [stopInterval, fetchFilteredTaskList]);
+
+  useEffect(() => {
+    fetchFilteredTaskList();
+    startInterval();
+    return () => stopInterval();
+  }, [filter]);
 
   return (
     <RefreshContext.Provider

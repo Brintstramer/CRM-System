@@ -6,49 +6,59 @@ import {
   ErrorMessage,
 } from "../types/types";
 
-const BASE_URL = "https://easydev.club/api/v1/todos";
+const api = axios.create({
+  baseURL: "https://easydev.club/api/v1/todos",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
 export const fetchTasks = async (
   filter: string
 ): Promise<ResponseData<TaskType, TasksNumber>> => {
   try {
-    const response = await axios.get<ResponseData<TaskType, TasksNumber>>(
-      `${BASE_URL}?filter=${filter}`
-    );
-
+    const response = await api.get<ResponseData<TaskType, TasksNumber>>("", {
+      params: { filter },
+    });
     return response.data;
   } catch {
     throw new Error(ErrorMessage.FailedTaskList);
   }
 };
 
-export const addNewTask = async (title: string) => {
+export const addNewTask = async (title: string): Promise<void> => {
   try {
-    await axios.post(BASE_URL, { title });
+    await api.post("", { title });
   } catch {
     throw new Error(ErrorMessage.FailedNewTask);
   }
 };
 
-export const deleteTask = async (id: number) => {
+export const deleteTask = async (id: number): Promise<void> => {
   try {
-    await axios.delete(`${BASE_URL}/${id}`);
+    await api.delete(`/${id}`);
   } catch {
     throw new Error(ErrorMessage.FailedDeleteTask);
   }
 };
 
-export const changeTaskStatus = async (id: number, status: boolean) => {
+export const changeTaskStatus = async (
+  id: number,
+  status: boolean
+): Promise<void> => {
   try {
-    await axios.put(`${BASE_URL}/${id}`, { isDone: !status });
+    await api.put(`/${id}`, { isDone: !status });
   } catch {
     throw new Error(ErrorMessage.FailedChangeStatusTask);
   }
 };
 
-export const changeTaskTitle = async (id: number, title: string) => {
+export const changeTaskTitle = async (
+  id: number,
+  title: string
+): Promise<void> => {
   try {
-    await axios.put(`${BASE_URL}/${id}`, { title });
+    await api.put(`/${id}`, { title });
   } catch {
     throw new Error(ErrorMessage.FailedChangeTask);
   }

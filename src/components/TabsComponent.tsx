@@ -1,3 +1,4 @@
+import React from "react";
 import { Tabs } from "antd";
 import { TasksNumber } from "../types/types";
 
@@ -36,4 +37,4 @@ const TabsComponent: React.FC<TabsProps> = ({
   );
 };
 
-export default TabsComponent;
+export default React.memo(TabsComponent);
