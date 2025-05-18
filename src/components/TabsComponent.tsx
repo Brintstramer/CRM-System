@@ -1,37 +1,37 @@
 import React from "react";
 import { Tabs } from "antd";
-import { TasksNumber } from "../types/types";
+import { Filter, TodoInfo } from "../types/types";
 
 type TabsProps = {
-  setFilter: (filter: string) => void;
-  filter: string;
-  tasksNumber: TasksNumber;
+  setFilter: (filter: Filter) => void;
+  filter: Filter;
+  todoInfo: TodoInfo;
 };
 
 const TabsComponent: React.FC<TabsProps> = ({
   setFilter,
   filter,
-  tasksNumber,
+  todoInfo,
 }) => {
   const items = [
     {
-      label: `Все ${tasksNumber.all}`,
-      key: "all",
+      label: `Все ${todoInfo.all}`,
+      key: Filter.All,
     },
     {
-      label: `в работе ${tasksNumber.inWork}`,
-      key: "inWork",
+      label: `в работе ${todoInfo.inWork}`,
+      key: Filter.InWork,
     },
     {
-      label: `сделано ${tasksNumber.completed}`,
-      key: "completed",
+      label: `сделано ${todoInfo.completed}`,
+      key: Filter.Completed,
     },
   ];
 
   return (
     <Tabs
       activeKey={filter}
-      onChange={(key: string) => setFilter(key)}
+      onChange={(key) => setFilter(key as Filter)}
       items={items}
     />
   );

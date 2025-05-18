@@ -1,19 +1,20 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import TodoPage from "./pages/Todo";
 import RootLayout from "./pages/Root";
 import ProfilePage from "./pages/Profile";
-import HomePage from "./pages/Home";
-import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
-    errorElement: <ErrorPage />,
     children: [
       {
-        path: "/",
-        element: <HomePage />,
+        index: true,
+        element: <Navigate to="/todo" replace />,
       },
       {
         path: "profile",

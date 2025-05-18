@@ -1,28 +1,32 @@
 import { Button, Form, Input } from "antd";
-import { addNewTask } from "../api/http";
-import { ErrorMessage, ErrorType } from "../types/types";
+import { api } from "../api/api";
+import { MAX_TITLE_LENGTH, MIN_TITLE_LENGTH } from "../constants";
+import { useState } from "react";
 
 type NewTaskProps = {
   fetchFilteredTaskList: () => Promise<void>;
-  setError: (error: ErrorType) => void;
+  showError: (error: string) => void;
 };
 
 const NewTask: React.FC<NewTaskProps> = ({
   fetchFilteredTaskList,
-  setError,
+  showError,
 }) => {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleAddNewTask = async (value: { taskTitle: string }) => {
+  const handleAddNewTask = async ({ title }: { title: string }) => {
     try {
-      await addNewTask(value.taskTitle);
+      setLoading(true);
+      await api.post("", { title });
       await fetchFilteredTaskList();
       form.resetFields();
     } catch (error: unknown) {
-      setError({
-        message:
-          error instanceof Error ? error.message : ErrorMessage.FailedNewTask,
-      });
+      showError(
+        error instanceof Error ? error.message : "Не получилось создать задачу."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,23 +38,23 @@ const NewTask: React.FC<NewTaskProps> = ({
       style={{ display: "flex", justifyContent: "space-between" }}
     >
       <Form.Item
-        name="taskTitle"
+        name="title"
         rules={[
           {
             required: true,
-            message: "Введите не менее 2 и не более 64 символов",
+            message: `Введите не менее ${MIN_TITLE_LENGTH} и не более ${MAX_TITLE_LENGTH} символов`,
           },
           {
-            min: 2,
-            max: 64,
-            message: "Введите не менее 2 и не более 64 символов",
+            min: MIN_TITLE_LENGTH,
+            max: MAX_TITLE_LENGTH,
+            message: `Введите не менее ${MIN_TITLE_LENGTH} и не более ${MAX_TITLE_LENGTH} символов`,
           },
         ]}
       >
         <Input placeholder="Напишите задачу..." />
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" loading={loading}>
           Создать
         </Button>
       </Form.Item>

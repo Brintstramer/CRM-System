@@ -1,36 +1,26 @@
-export type TaskType = {
-  created: string;
+export interface Todo {
   id: number;
   title: string;
+  created: string;
   isDone: boolean;
-};
+}
 
-export type TasksNumber = {
+export interface TodoInfo {
   all: number;
-  inWork: number;
   completed: number;
-};
+  inWork: number;
+}
 
-export type ErrorType = { message: string } | null;
-
-export type ResponseData<T, N> = {
+export interface MetaResponse<T, N> {
   data: T[];
   info: N;
   meta: {
     totalAmount: number;
   };
-};
+}
 
-// export enum Filter {
-//   All = "all",
-//   InWork = "inWork",
-//   Completed = "completed",
-// }
-
-export enum ErrorMessage {
-  FailedTaskList = "Не получилось загрузить список задач.",
-  FailedNewTask = "Не получилось создать задачу.",
-  FailedDeleteTask = "Не получилсь удалить задачу.",
-  FailedChangeStatusTask = "Не получилось изменить статус задачи.",
-  FailedChangeTask = "Не получилось изменить задачу.",
+export enum Filter {
+  All = "all",
+  InWork = "inWork",
+  Completed = "completed",
 }

@@ -1,15 +1,17 @@
 import React from "react";
 import classes from "../TaskList/TaskList.module.css";
 import Task from "../Task/Task";
-import { TaskType, ErrorType } from "../../types/types";
+import { Todo } from "../../types/types";
 
 type TaskListProps = {
   fetchFilteredTaskList: () => Promise<void>;
-  taskList: TaskType[];
+  taskList: Todo[];
   fallbackText: string;
   isFetching: boolean;
   loadingText: string;
-  setError: (error: ErrorType) => void;
+  showError: (error: string) => void;
+  startRefreshInterval: () => void;
+  stopRefreshInterval: () => void;
 };
 
 const TaskList: React.FC<TaskListProps> = ({
@@ -18,7 +20,9 @@ const TaskList: React.FC<TaskListProps> = ({
   fallbackText,
   isFetching,
   loadingText,
-  setError,
+  showError,
+  startRefreshInterval,
+  stopRefreshInterval,
 }) => {
   return (
     <>
@@ -33,7 +37,9 @@ const TaskList: React.FC<TaskListProps> = ({
               <Task
                 task={task}
                 fetchFilteredTaskList={fetchFilteredTaskList}
-                setError={setError}
+                showError={showError}
+                startRefreshInterval={startRefreshInterval}
+                stopRefreshInterval={stopRefreshInterval}
               />
             </li>
           ))}
