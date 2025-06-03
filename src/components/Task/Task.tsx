@@ -41,7 +41,7 @@ const Task: React.FC<TaskProps> = ({
 
   const handleDeleteTask = async (id: number) => {
     try {
-      await api.delete(`/${id}`);
+      await api.delete(`/todos/${id}`);
       await fetchFilteredTaskList();
     } catch (error: unknown) {
       showError(
@@ -52,7 +52,7 @@ const Task: React.FC<TaskProps> = ({
 
   const handleChangeTaskStatus = async (id: number, status: boolean) => {
     try {
-      await api.put(`/${id}`, { isDone: !status });
+      await api.put(`/todos/${id}`, { isDone: !status });
       await fetchFilteredTaskList();
     } catch (error: unknown) {
       showError(
@@ -69,7 +69,7 @@ const Task: React.FC<TaskProps> = ({
   ) => {
     try {
       setLoading(true);
-      await api.put(`/${id}`, { title });
+      await api.put(`/todos/${id}`, { title });
       await fetchFilteredTaskList();
       setIsEditing(false);
       startRefreshInterval();

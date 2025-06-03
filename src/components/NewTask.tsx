@@ -18,7 +18,7 @@ const NewTask: React.FC<NewTaskProps> = ({
   const handleAddNewTask = async ({ title }: { title: string }) => {
     try {
       setLoading(true);
-      await api.post("", { title });
+      await api.post("/todos", { title });
       await fetchFilteredTaskList();
       form.resetFields();
     } catch (error: unknown) {
