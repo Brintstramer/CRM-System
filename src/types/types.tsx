@@ -24,3 +24,8 @@ export enum Filter {
   InWork = "inWork",
   Completed = "completed",
 }
+
+export interface Token {
+  accessToken: string;
+  refreshToken: string;
+}

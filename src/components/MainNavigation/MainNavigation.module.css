@@ -1,0 +1,7 @@
+.menu {
+  background: none;
+  /* border: none !important; */
+  padding: 3rem 0 0 2rem;
+  min-width: 10.5rem;
+  font-weight: 600;
+}

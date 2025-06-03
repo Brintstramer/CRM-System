@@ -1,0 +1,48 @@
+.auth {
+  width: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  gap: 2rem;
+  color: #525252;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.logo {
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+.form :global(.ant-form-item) {
+  font-weight: 600;
+  min-height: 2rem;
+}
+
+.a {
+  color: #7f265b;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.a:hover {
+  color: #550c39;
+}
+
+.a:active {
+  color: #55193f;
+}
+
+.footer {
+  color: #525252;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}

@@ -5,7 +5,8 @@ import {
 } from "react-router-dom";
 import TodoPage from "./pages/Todo";
 import RootLayout from "./pages/Root";
-import ProfilePage from "./pages/Profile";
+import ProfilePage from "./pages/Profile/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -22,7 +23,11 @@ const router = createBrowserRouter([
       },
       {
         path: "todo",
-        element: <TodoPage />,
+        element: (
+          <ProtectedRoute>
+            <TodoPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

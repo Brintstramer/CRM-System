@@ -10,7 +10,6 @@ body {
 
 #root {
   height: 100%;
-  padding: 2rem 2rem 2rem 8rem;
   display: grid;
   grid-template-columns: 10% 90%;
 }
