@@ -28,7 +28,7 @@ const Registration: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const showAuthHandler = (): void => {
-    dispatch(uiActions.showAuth());
+    dispatch(uiActions.setProfileView("auth"));
     dispatch(uiActions.hideAuthLink());
   };
 
@@ -42,7 +42,12 @@ const Registration: React.FC = () => {
         duration: 2,
       });
 
-      await api.post("/auth/signup", values);
+      const formData = {
+        ...values,
+        phoneNumber: `+7${values.phoneNumber}`,
+      };
+
+      await api.post("/auth/signup", formData);
 
       notificationApi.success({
         message: "Успешно!",
@@ -52,21 +57,19 @@ const Registration: React.FC = () => {
       });
 
       dispatch(uiActions.showAuthLink());
-
-      setLoading(false);
     } catch (error) {
-      let errorMessage: string = "Ошибка регистрации!";
-      if (axios.isAxiosError(error)) {
-        errorMessage = error.response?.data || errorMessage;
-      }
+      const errorMessage = axios.isAxiosError(error)
+        ? error.response?.data || "Ошибка регистрации!"
+        : "Неизвестная ошибка";
 
       notificationApi.error({
         message: "Ошибка",
         description: errorMessage,
         duration: 5,
       });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

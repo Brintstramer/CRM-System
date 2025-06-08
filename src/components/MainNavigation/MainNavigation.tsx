@@ -3,6 +3,7 @@ import { Menu, ConfigProvider, MenuProps } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { authActions, selectAccessToken } from "../../store/auth-slice";
+import { uiActions } from "../../store/ui-slice";
 
 const MainNavigation: React.FC = () => {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ const MainNavigation: React.FC = () => {
 
   const handleLogout = (): void => {
     dispatch(authActions.logout());
-    localStorage.removeItem("refreshToken");
+    dispatch(uiActions.setProfileView("auth"));
     navigate("/profile");
   };
 

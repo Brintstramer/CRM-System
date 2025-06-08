@@ -18,6 +18,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Token } from "../../types/types";
+import { saveTokens } from "../../utils/auth";
 
 interface AuthData {
   login: string;
@@ -32,11 +33,11 @@ const Auth: React.FC = () => {
   const [notificationApi, contextHolder] = notification.useNotification();
   const [loading, setLoading] = useState(false);
 
-  const showRegistrationHandler = () => {
-    dispatch(uiActions.showRegistration());
+  const showRegistrationHandler = async () => {
+    dispatch(uiActions.setProfileView("registration"));
   };
 
-  const onFinish = async (values: AuthData): Promise<void> => {
+  const onFinish = async (values: AuthData) => {
     try {
       setLoading(true);
 
@@ -47,44 +48,30 @@ const Auth: React.FC = () => {
       });
 
       const response = await api.post<Token>("/auth/signin", values);
-
-      dispatch(authActions.login(response.data));
-
-      const { accessToken, refreshToken } = response.data;
-
-      if (values.remember) {
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-        sessionStorage.removeItem("accessToken");
-        sessionStorage.removeItem("refreshToken");
-      } else {
-        sessionStorage.setItem("accessToken", accessToken);
-        sessionStorage.setItem("refreshToken", refreshToken);
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-      }
+      saveTokens(response.data, values.remember);
 
       notificationApi.success({
         message: "Успешно!",
         description: "Авторизация прошла успешно.",
-        duration: 5,
+        duration: 2,
+        onClose: () => {
+          navigate("/todo");
+          dispatch(authActions.login(response.data));
+        },
       });
-
-      setTimeout(() => navigate("/todo"), 2000);
-
-      setLoading(false);
     } catch (error) {
-      let errorMessage: string = "Ошибка входа. Проверьте логин или пароль.";
-      if (axios.isAxiosError(error)) {
-        errorMessage = error.response?.data || errorMessage;
-      }
+      const errorMessage = axios.isAxiosError(error)
+        ? error.response?.data || "Неверные логин или пароль"
+        : "Неизвестная ошибка";
 
       notificationApi.error({
         message: "Ошибка",
-        description: errorMessage,
+        description: errorMessage.includes("Invalid credential")
+          ? "Неверные логин или пароль"
+          : errorMessage,
         duration: 5,
       });
-
+    } finally {
       setLoading(false);
     }
   };

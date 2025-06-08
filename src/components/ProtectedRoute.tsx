@@ -10,9 +10,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const accessToken = useSelector(selectAccessToken);
 
-  const protect = accessToken ? children : <Navigate to="/profile" replace />;
-
-  return protect;
+  return accessToken ? children : <Navigate to="/profile" replace />;
 };
 
 export default ProtectedRoute;

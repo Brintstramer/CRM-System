@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./index";
 import { Token } from "../types/types";
+import { clearTokens } from "../utils/auth";
 
 interface AuthState {
   accessToken: string | null;
@@ -23,10 +24,7 @@ const authSlice = createSlice({
     logout(state) {
       state.accessToken = null;
       state.refreshToken = null;
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      sessionStorage.removeItem("accessToken");
-      sessionStorage.removeItem("refreshToken");
+      clearTokens();
     },
   },
 });
