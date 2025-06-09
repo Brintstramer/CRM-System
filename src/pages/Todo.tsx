@@ -59,7 +59,7 @@ const TodoPage: React.FC = () => {
 
   useEffect(() => {
     fetchFilteredTaskList();
-    // startRefreshInterval();
+    startRefreshInterval();
 
     return stopRefreshInterval;
   }, [fetchFilteredTaskList, startRefreshInterval, stopRefreshInterval]);

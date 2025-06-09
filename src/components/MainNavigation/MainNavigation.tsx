@@ -20,26 +20,28 @@ const MainNavigation: React.FC = () => {
     navigate("/profile");
   };
 
-  const items: MenuProps["items"] = [
-    {
-      key: "/profile",
-      label: <NavLink to="/profile">Профиль</NavLink>,
-    },
-    {
-      key: "/todo",
-      label: <NavLink to="/todo">Список задач</NavLink>,
-    },
-    ...(accessToken
-      ? [
-          {
-            key: "logout",
-            label: "Выйти",
-            onClick: handleLogout,
-            style: { color: "#c45c5e" },
-          },
-        ]
-      : []),
-  ];
+  const items: MenuProps["items"] = accessToken
+    ? [
+        {
+          key: "/profile",
+          label: <NavLink to="/profile">Профиль</NavLink>,
+        },
+        {
+          key: "/todo",
+          label: <NavLink to="/todo">Список задач</NavLink>,
+        },
+        ...(accessToken
+          ? [
+              {
+                key: "logout",
+                label: "Выйти",
+                onClick: handleLogout,
+                style: { color: "#c45c5e" },
+              },
+            ]
+          : []),
+      ]
+    : [];
 
   return (
     <ConfigProvider

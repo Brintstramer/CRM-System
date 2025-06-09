@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./index";
 import { Token } from "../types/types";
-import { clearTokens } from "../utils/auth";
+import { tokens } from "../utils/auth";
 
 interface AuthState {
   accessToken: string | null;
@@ -9,8 +9,8 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  accessToken: localStorage.getItem("accessToken"),
-  refreshToken: localStorage.getItem("refreshToken"),
+  accessToken: tokens.access,
+  refreshToken: tokens.refresh,
 };
 
 const authSlice = createSlice({
@@ -20,11 +20,12 @@ const authSlice = createSlice({
     login(state, action: PayloadAction<Token>) {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
+      tokens.set(action.payload);
     },
     logout(state) {
       state.accessToken = null;
       state.refreshToken = null;
-      clearTokens();
+      tokens.clear();
     },
   },
 });

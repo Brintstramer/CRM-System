@@ -1,27 +1,12 @@
 import { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import { Token } from "../types/types";
-import { clearTokens, saveTokens } from "../utils/auth";
+import { tokens } from "../utils/auth";
 
 export const setupInterceptors = (api: AxiosInstance) => {
-  const getAccessToken = (): string | null => {
-    return (
-      localStorage.getItem("accessToken") ||
-      sessionStorage.getItem("accessToken")
-    );
-  };
-
-  const getRefreshToken = (): string | null => {
-    return (
-      localStorage.getItem("refreshToken") ||
-      sessionStorage.getItem("refreshToken")
-    );
-  };
-
   api.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-      const token = getAccessToken();
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      if (tokens.access) {
+        config.headers.Authorization = `Bearer ${tokens.access}`;
       }
       return config;
     },
@@ -38,24 +23,20 @@ export const setupInterceptors = (api: AxiosInstance) => {
       if (
         error.response?.status === 401 &&
         !originalRequest._retry &&
-        getRefreshToken()
+        tokens.refresh
       ) {
         originalRequest._retry = true;
 
         try {
-          const response = await api.post<Token>("/auth/refresh", {
-            refreshToken: getRefreshToken(),
+          const { data } = await api.post<Token>("/auth/refresh", {
+            refreshToken: tokens.refresh,
           });
-
-          const { accessToken, refreshToken } = response.data;
-          const remember = localStorage.getItem("refreshToken") !== null;
-          saveTokens({ accessToken, refreshToken }, remember);
-
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          tokens.set(data);
+          originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
           return api(originalRequest);
         } catch (refreshError) {
           console.error("Ошибка обновления токена:", refreshError);
-          clearTokens();
+          tokens.clear();
           return Promise.reject(refreshError);
         }
       }

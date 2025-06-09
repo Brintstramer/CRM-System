@@ -44,7 +44,7 @@ const Registration: React.FC = () => {
 
       const formData = {
         ...values,
-        phoneNumber: `+7${values.phoneNumber}`,
+        phoneNumber: values.phoneNumber ? `+7${values.phoneNumber}` : "",
       };
 
       await api.post("/auth/signup", formData);

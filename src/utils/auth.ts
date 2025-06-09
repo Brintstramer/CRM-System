@@ -1,15 +1,18 @@
 import { Token } from "../types/types";
 
-export const saveTokens = (tokens: Token, remember: boolean) => {
-  const storage = remember ? localStorage : sessionStorage;
-
-  storage.setItem("accessToken", tokens.accessToken);
-  storage.setItem("refreshToken", tokens.refreshToken);
-};
-
-export const clearTokens = () => {
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
-  sessionStorage.removeItem("accessToken");
-  sessionStorage.removeItem("refreshToken");
+export const tokens = {
+  get access(): string | null {
+    return localStorage.getItem("accessToken");
+  },
+  get refresh(): string | null {
+    return localStorage.getItem("refreshToken");
+  },
+  set(data: Token): void {
+    localStorage.setItem("accessToken", data.accessToken);
+    localStorage.setItem("refreshToken", data.refreshToken);
+  },
+  clear(): void {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+  },
 };

@@ -3,10 +3,10 @@ import authLogo from "../../assets/authLogo.svg";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import {
   Button,
-  Checkbox,
+  // Checkbox,
   Form,
   Input,
-  Flex,
+  // Flex,
   ConfigProvider,
   notification,
 } from "antd";
@@ -18,7 +18,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Token } from "../../types/types";
-import { saveTokens } from "../../utils/auth";
+import { tokens } from "../../utils/auth";
 
 interface AuthData {
   login: string;
@@ -44,11 +44,13 @@ const Auth: React.FC = () => {
       notificationApi.info({
         message: "Авторизация",
         description: "Проверка данных...",
-        duration: 2,
+        key: "auth-notification",
       });
 
-      const response = await api.post<Token>("/auth/signin", values);
-      saveTokens(response.data, values.remember);
+      const { data } = await api.post<Token>("/auth/signin", values);
+      tokens.set(data);
+
+      notificationApi.destroy("auth-notification");
 
       notificationApi.success({
         message: "Успешно!",
@@ -56,13 +58,15 @@ const Auth: React.FC = () => {
         duration: 2,
         onClose: () => {
           navigate("/todo");
-          dispatch(authActions.login(response.data));
+          dispatch(authActions.login(data));
         },
       });
     } catch (error) {
       const errorMessage = axios.isAxiosError(error)
         ? error.response?.data || "Неверные логин или пароль"
         : "Неизвестная ошибка";
+
+      notificationApi.destroy("auth-notification");
 
       notificationApi.error({
         message: "Ошибка",
@@ -137,7 +141,7 @@ const Auth: React.FC = () => {
             />
           </Form.Item>
           <Form.Item>
-            <Flex
+            {/* <Flex
               justify="space-between"
               align="center"
               style={{ marginTop: "2rem" }}
@@ -145,10 +149,10 @@ const Auth: React.FC = () => {
               <Form.Item name="remember" valuePropName="checked" noStyle>
                 <Checkbox style={{ fontWeight: "500" }}>Запомнить</Checkbox>
               </Form.Item>
-              {/* <a className={classes.a} href="">
+              <a className={classes.a} href="">
                 Не помню пароль
-              </a> */}
-            </Flex>
+              </a>
+            </Flex> */}
           </Form.Item>
           <Form.Item>
             <Button
