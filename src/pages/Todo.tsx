@@ -6,10 +6,6 @@ import { fetchTasks } from "../api/apiTodo";
 import { Filter, TodoInfo, Todo } from "../types/types";
 import { REFRESH_INTERVAL } from "../constants";
 import { notification } from "antd";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { refreshAccessToken } from "../store/thunks";
-import { AppDispatch } from "../store";
 
 const TodoPage: React.FC = () => {
   const [taskList, setTaskList] = useState<Todo[]>([]);
@@ -21,11 +17,6 @@ const TodoPage: React.FC = () => {
     inWork: 0,
   });
 
-  const accessToken = localStorage.getItem("accessToken");
-  const refreshToken = localStorage.getItem("refreshToken");
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-
   const intervalRef = useRef<ReturnType<typeof setInterval>>(null);
 
   const showError = useCallback((message: string) => {
@@ -35,16 +26,6 @@ const TodoPage: React.FC = () => {
       placement: "topRight",
     });
   }, []);
-
-  const getToken = async () => {
-    if (!accessToken && refreshToken) {
-      try {
-        await dispatch(refreshAccessToken()).unwrap();
-      } catch {
-        navigate("/profile");
-      }
-    }
-  };
 
   const fetchFilteredTaskList = useCallback(async () => {
     setIsFetching(true);
@@ -77,18 +58,11 @@ const TodoPage: React.FC = () => {
   }, [fetchFilteredTaskList, stopRefreshInterval]);
 
   useEffect(() => {
-    getToken();
-
     fetchFilteredTaskList();
     startRefreshInterval();
 
     return stopRefreshInterval;
-  }, [
-    accessToken,
-    fetchFilteredTaskList,
-    startRefreshInterval,
-    stopRefreshInterval,
-  ]);
+  }, [fetchFilteredTaskList, startRefreshInterval, stopRefreshInterval]);
 
   return (
     <div
