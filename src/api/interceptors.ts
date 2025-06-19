@@ -1,12 +1,17 @@
 import { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
-import { Token } from "../types/types";
-import { tokens } from "../utils/auth";
+import store from "../store";
+import { refreshAccessToken } from "../store/thunks";
+import { logout } from "../store/auth-slice";
+import { setProfileView } from "../store/ui-slice";
 
 export const setupInterceptors = (api: AxiosInstance) => {
   api.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-      if (tokens.access) {
-        config.headers.Authorization = `Bearer ${tokens.access}`;
+      const accessToken =
+        localStorage.getItem("accessToken") ||
+        store.getState().auth.accessToken;
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
       }
       return config;
     },
@@ -21,22 +26,26 @@ export const setupInterceptors = (api: AxiosInstance) => {
       };
 
       if (
-        error.response?.status === 401 &&
-        !originalRequest._retry &&
-        tokens.refresh
+        error.config?.url?.includes("auth/signin") ||
+        error.config?.url?.includes("auth/refresh")
       ) {
+        return Promise.reject(error);
+      }
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        console.log(error.response);
         originalRequest._retry = true;
-
         try {
-          const { data } = await api.post<Token>("/auth/refresh", {
-            refreshToken: tokens.refresh,
-          });
-          tokens.set(data);
-          originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+          const newAccessToken = await store
+            .dispatch(refreshAccessToken())
+            .unwrap();
+          if (originalRequest.headers) {
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          }
           return api(originalRequest);
         } catch (refreshError) {
           console.error("Ошибка обновления токена:", refreshError);
-          tokens.clear();
+          store.dispatch(logout());
+          store.dispatch(setProfileView("auth"));
           return Promise.reject(refreshError);
         }
       }

@@ -6,75 +6,43 @@ import {
   MIN_USERNAME_LENGTH,
 } from "../../constants";
 import classes from "./Registration.module.css";
-import { Form, Input, Button, ConfigProvider, notification } from "antd";
-import { selectAuthLinkIsVisible, uiActions } from "../../store/ui-slice";
-import { api } from "../../api/api";
-import axios from "axios";
-import { useState } from "react";
-
-interface UserRegistration {
-  username: string;
-  login: string;
-  password: string;
-  email: string;
-  phoneNumber?: string;
-}
+import { Form, Input, Button, ConfigProvider } from "antd";
+import { registerUser } from "../../store/thunks";
+import { AppDispatch, RootState } from "../../store";
+import { UserRegistration } from "../../types/types";
+import {
+  hideAuthLink,
+  setProfileView,
+  showAuthLink,
+} from "../../store/ui-slice";
 
 const Registration: React.FC = () => {
-  const dispatch = useDispatch();
-  const authLink = useSelector(selectAuthLinkIsVisible);
-
-  const [notificationApi, contextHolder] = notification.useNotification();
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const authLink = useSelector(
+    (state: RootState) => state.ui.authLinkIsVisible
+  );
+  const loading = useSelector((state: RootState) => state.auth.loading);
+  const [form] = Form.useForm();
 
   const showAuthHandler = (): void => {
-    dispatch(uiActions.setProfileView("auth"));
-    dispatch(uiActions.hideAuthLink());
+    dispatch(setProfileView("auth"));
+    dispatch(hideAuthLink());
   };
 
   const onFinish = async (values: UserRegistration): Promise<void> => {
-    try {
-      setLoading(true);
+    const formData = {
+      ...values,
+      phoneNumber: values.phoneNumber ? `+7${values.phoneNumber}` : "",
+    };
 
-      notificationApi.info({
-        message: "Регистрация",
-        description: "Создание личного кабинета...",
-        duration: 2,
-      });
+    await dispatch(registerUser(formData)).unwrap();
+    form.resetFields();
 
-      const formData = {
-        ...values,
-        phoneNumber: values.phoneNumber ? `+7${values.phoneNumber}` : "",
-      };
-
-      await api.post("/auth/signup", formData);
-
-      notificationApi.success({
-        message: "Успешно!",
-        description:
-          "Регистрация прошла успешно. Теперь вы можете войти в личный кабинет.",
-        duration: 5,
-      });
-
-      dispatch(uiActions.showAuthLink());
-    } catch (error) {
-      const errorMessage = axios.isAxiosError(error)
-        ? error.response?.data || "Ошибка регистрации!"
-        : "Неизвестная ошибка";
-
-      notificationApi.error({
-        message: "Ошибка",
-        description: errorMessage,
-        duration: 5,
-      });
-    } finally {
-      setLoading(false);
-    }
+    dispatch(showAuthLink());
   };
 
   return (
     <div className={classes.registration}>
-      {contextHolder}
       <header className={classes.header}>
         <h1>Пройдите регистрацию</h1>
       </header>
@@ -102,6 +70,7 @@ const Registration: React.FC = () => {
         }}
       >
         <Form
+          form={form}
           className={classes.form}
           layout="vertical"
           name="basic"

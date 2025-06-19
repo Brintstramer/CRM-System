@@ -2,23 +2,25 @@ import classes from "./MainNavigation.module.css";
 import { Menu, ConfigProvider, MenuProps } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { authActions, selectAccessToken } from "../../store/auth-slice";
-import { uiActions } from "../../store/ui-slice";
+import { setProfileView } from "../../store/ui-slice";
+import { RootState } from "../../store";
+import { logout } from "../../store/auth-slice";
+import { useCallback } from "react";
 
 const MainNavigation: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const accessToken = useSelector(selectAccessToken);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
   const location = useLocation();
   const selectedKey = location.pathname === "/" ? "/todo" : location.pathname;
 
-  const handleLogout = (): void => {
-    dispatch(authActions.logout());
-    dispatch(uiActions.setProfileView("auth"));
+  const handleLogout = useCallback(() => {
+    dispatch(logout());
+    dispatch(setProfileView("auth"));
     navigate("/profile");
-  };
+  }, [dispatch, navigate]);
 
   const items: MenuProps["items"] = accessToken
     ? [
@@ -30,16 +32,15 @@ const MainNavigation: React.FC = () => {
           key: "/todo",
           label: <NavLink to="/todo">Список задач</NavLink>,
         },
-        ...(accessToken
-          ? [
-              {
-                key: "logout",
-                label: "Выйти",
-                onClick: handleLogout,
-                style: { color: "#c45c5e" },
-              },
-            ]
-          : []),
+        {
+          type: "divider",
+        },
+        {
+          key: "logout",
+          label: "Выйти",
+          onClick: handleLogout,
+          style: { color: "#c45c5e" },
+        },
       ]
     : [];
 
