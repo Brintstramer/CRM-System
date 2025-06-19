@@ -8,81 +8,33 @@ import {
   Input,
   // Flex,
   ConfigProvider,
-  notification,
 } from "antd";
-import { useDispatch } from "react-redux";
-import { uiActions } from "../../store/ui-slice";
-import { authActions } from "../../store/auth-slice";
-import { api } from "../../api/api";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { Token } from "../../types/types";
-import { tokens } from "../../utils/auth";
-
-interface AuthData {
-  login: string;
-  password: string;
-  remember: boolean;
-}
+import { AuthData } from "../../types/types";
+import { AppDispatch, RootState } from "../../store";
+import { loginUser } from "../../store/thunks";
+import { setProfileView } from "../../store/ui-slice";
 
 const Auth: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const loading = useSelector((state: RootState) => state.auth.loading);
 
-  const [notificationApi, contextHolder] = notification.useNotification();
-  const [loading, setLoading] = useState(false);
-
-  const showRegistrationHandler = async () => {
-    dispatch(uiActions.setProfileView("registration"));
-  };
+  const showRegistrationHandler = () =>
+    dispatch(setProfileView("registration"));
 
   const onFinish = async (values: AuthData) => {
     try {
-      setLoading(true);
-
-      notificationApi.info({
-        message: "Авторизация",
-        description: "Проверка данных...",
-        key: "auth-notification",
-      });
-
-      const { data } = await api.post<Token>("/auth/signin", values);
-      tokens.set(data);
-
-      notificationApi.destroy("auth-notification");
-
-      notificationApi.success({
-        message: "Успешно!",
-        description: "Авторизация прошла успешно.",
-        duration: 2,
-        onClose: () => {
-          navigate("/todo");
-          dispatch(authActions.login(data));
-        },
-      });
+      await dispatch(loginUser(values)).unwrap();
+      navigate("/todo");
     } catch (error) {
-      const errorMessage = axios.isAxiosError(error)
-        ? error.response?.data || "Неверные логин или пароль"
-        : "Неизвестная ошибка";
-
-      notificationApi.destroy("auth-notification");
-
-      notificationApi.error({
-        message: "Ошибка",
-        description: errorMessage.includes("Invalid credential")
-          ? "Неверные логин или пароль"
-          : errorMessage,
-        duration: 5,
-      });
-    } finally {
-      setLoading(false);
+      console.error(error);
     }
   };
 
   return (
     <div className={classes.auth}>
-      {contextHolder}
       <header className={classes.header}>
         <img src={authLogo} alt="logo" className={classes.logo} />
         <h1>Войдите в личный кабинет</h1>
