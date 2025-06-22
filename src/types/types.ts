@@ -61,6 +61,4 @@ export interface ProfileRequest {
   phoneNumber: string;
 }
 
-export interface RefreshToken {
-  refreshToken: string;
-}
+export type ProfileView = "auth" | "registration" | "userData";

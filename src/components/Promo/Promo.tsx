@@ -1,7 +1,8 @@
+import React from "react";
 import classes from "./Promo.module.css";
 import profileImg from "../../assets/promoImg.svg";
 
-const Promo = () => {
+const Promo: React.FC = () => {
   return (
     <div className={classes.promo}>
       <img

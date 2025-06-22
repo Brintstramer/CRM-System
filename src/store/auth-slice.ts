@@ -1,11 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ProfileRequest } from "../types/types";
-import {
-  getUserData,
-  loginUser,
-  refreshAccessToken,
-  registerUser,
-} from "./thunks";
+import { getUserData, loginUser, refreshAccessToken, registerUser } from "./thunks";
 
 interface InitialState {
   loading: boolean;
@@ -58,7 +53,7 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = payload ?? "Что-то пошло не так";
+        state.error = payload ?? "Ошибка при регистрации";
       })
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
@@ -72,7 +67,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = payload ?? "Что-то пошло не так";
+        state.error = payload ?? "Ошибка при авторизации";
       })
       .addCase(getUserData.pending, (state) => {
         state.loading = true;
@@ -84,17 +79,17 @@ const authSlice = createSlice({
       })
       .addCase(getUserData.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = payload ?? "Что-то пошло не так";
+        state.error = payload ?? "Сессия закончилась. Пройдите авторизацию заново.";
       })
       .addCase(refreshAccessToken.fulfilled, (state, { payload }) => {
-        state.accessToken = payload;
-        localStorage.setItem("accessToken", payload);
+        state.accessToken = payload.accessToken;
+        state.refreshToken = payload.refreshToken;
       })
       .addCase(refreshAccessToken.rejected, (state, { payload }) => {
         state.accessToken = null;
         state.refreshToken = null;
         state.userData = null;
-        state.error = payload ?? "Что-то пошло не так";
+        state.error = payload ?? "Сессия закончилась. Пройдите авторизацию заново.";
       });
   },
 });

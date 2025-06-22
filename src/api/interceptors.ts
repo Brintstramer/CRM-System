@@ -1,21 +1,33 @@
 import { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import store from "../store";
 import { refreshAccessToken } from "../store/thunks";
-import { logout } from "../store/auth-slice";
-import { setProfileView } from "../store/ui-slice";
+import { Token } from "../types/types.ts";
+
+let refreshTokenPromise: Promise<Token> | null = null;
+
+const getRefreshToken = async (): Promise<Token> => {
+  if (!refreshTokenPromise) {
+    refreshTokenPromise = store
+      .dispatch(refreshAccessToken())
+      .unwrap()
+      .finally(() => {
+        refreshTokenPromise = null;
+      });
+  }
+
+  return refreshTokenPromise;
+};
 
 export const setupInterceptors = (api: AxiosInstance) => {
   api.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-      const accessToken =
-        localStorage.getItem("accessToken") ||
-        store.getState().auth.accessToken;
+      const accessToken = store.getState().auth.accessToken;
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
       return config;
     },
-    (error: AxiosError) => Promise.reject(error)
+    (error: AxiosError) => Promise.reject(error),
   );
 
   api.interceptors.response.use(
@@ -32,25 +44,19 @@ export const setupInterceptors = (api: AxiosInstance) => {
         return Promise.reject(error);
       }
       if (error.response?.status === 401 && !originalRequest._retry) {
-        console.log(error.response);
         originalRequest._retry = true;
         try {
-          const newAccessToken = await store
-            .dispatch(refreshAccessToken())
-            .unwrap();
+          const newTokens = await getRefreshToken();
           if (originalRequest.headers) {
-            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+            originalRequest.headers.Authorization = `Bearer ${newTokens.accessToken}`;
           }
           return api(originalRequest);
         } catch (refreshError) {
-          console.error("Ошибка обновления токена:", refreshError);
-          store.dispatch(logout());
-          store.dispatch(setProfileView("auth"));
           return Promise.reject(refreshError);
         }
       }
 
       return Promise.reject(error);
-    }
+    },
   );
 };

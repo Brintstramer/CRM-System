@@ -1,3 +1,4 @@
+import React from "react";
 import classes from "./Auth.module.css";
 import authLogo from "../../assets/authLogo.svg";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
@@ -13,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AuthData } from "../../types/types";
 import { AppDispatch, RootState } from "../../store";
-import { loginUser } from "../../store/thunks";
+import { loginUser} from "../../store/thunks";
 import { setProfileView } from "../../store/ui-slice";
 
 const Auth: React.FC = () => {

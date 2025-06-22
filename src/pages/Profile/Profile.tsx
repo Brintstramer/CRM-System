@@ -1,3 +1,4 @@
+import React from "react";
 import classes from "../Profile/Profile.module.css";
 import Promo from "../../components/Promo/Promo";
 import Auth from "../../components/Auth/Auth";
@@ -10,57 +11,45 @@ import { AppDispatch, RootState } from "../../store";
 import Notifications from "../../components/Notifications";
 import { setProfileView } from "../../store/ui-slice";
 import { logout } from "../../store/auth-slice";
+import { ProfileView } from "../../types/types.ts";
 
 const ProfilePage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const profileView = useSelector((state: RootState) => state.ui.profileView);
-  const accessToken = localStorage.getItem("accessToken");
-  const refreshToken = localStorage.getItem("refreshToken");
+  const profileView: ProfileView = useSelector((state: RootState) => state.ui.profileView);
+  const accessToken: string | null = localStorage.getItem("accessToken");
+  const refreshToken: string | null = localStorage.getItem("refreshToken");
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (
-        !localStorage.getItem("accessToken") &&
-        !localStorage.getItem("refreshToken")
-      ) {
-        return;
-      }
+  const fetchUserData = async () => {
+    if (!accessToken && !refreshToken) {
+      dispatch(logout());
+      dispatch(setProfileView("auth"));
+      return;
+    }
 
-      if (!accessToken && refreshToken) {
-        try {
-          const token = await dispatch(refreshAccessToken()).unwrap();
-          if (token && profileView === "auth") {
-            await dispatch(getUserData()).unwrap();
-            dispatch(setProfileView("userData"));
-            return;
-          }
-        } catch {
-          dispatch(logout());
-          dispatch(setProfileView("auth"));
-          return;
-        }
-        return;
-      }
-
-      if (!accessToken && !refreshToken) {
+    if (!accessToken && refreshToken) {
+      try {
+        await dispatch(refreshAccessToken()).unwrap();
+      } catch {
         dispatch(logout());
         dispatch(setProfileView("auth"));
         return;
       }
+    }
 
-      if (accessToken) {
-        try {
-          await dispatch(getUserData()).unwrap();
-          dispatch(setProfileView("userData"));
-        } catch {
-          dispatch(logout());
-          dispatch(setProfileView("auth"));
-        }
-      }
-    };
+    try {
+      await dispatch(getUserData()).unwrap();
+      dispatch(setProfileView("userData"));
+    } catch {
+      dispatch(logout());
+      dispatch(setProfileView("auth"));
+    }
+  };
 
-    fetchUserData();
-  }, [accessToken, refreshToken, dispatch]);
+  useEffect(() => {
+    fetchUserData().catch((error) => {
+      console.error("Ошибка при получении данных пользователя:", error);
+    });
+  }, []);
 
   return (
     <div className={classes.profile}>

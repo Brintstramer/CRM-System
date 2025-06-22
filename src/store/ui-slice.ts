@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-type ProfileView = "auth" | "registration" | "userData";
+import { ProfileView } from "../types/types.ts";
 
 interface UIState {
   profileView: ProfileView;

@@ -1,3 +1,4 @@
+import React from "react";
 import "../Task/Task.css";
 import { useState } from "react";
 import { api } from "../../api/api";
@@ -28,7 +29,7 @@ const Task: React.FC<TaskProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const { Text } = Typography;
 
-  const handleEditClick = () => {
+  const handleEditClick: () => void = () => {
     form.setFieldsValue({ title: task.title });
     setIsEditing(true);
     stopRefreshInterval();
@@ -39,7 +40,7 @@ const Task: React.FC<TaskProps> = ({
     startRefreshInterval();
   };
 
-  const handleDeleteTask = async (id: number) => {
+  const handleDeleteTask = async (id: number): Promise<void> => {
     try {
       await api.delete(`/todos/${id}`);
       await fetchFilteredTaskList();
