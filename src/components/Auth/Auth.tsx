@@ -14,16 +14,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AuthData } from "../../types/types";
 import { AppDispatch, RootState } from "../../store";
-import { loginUser} from "../../store/thunks";
+import { loginUser } from "../../store/thunks";
 import { setProfileView } from "../../store/ui-slice";
 
 const Auth: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const loading = useSelector((state: RootState) => state.auth.loading);
-
-  const showRegistrationHandler = () =>
-    dispatch(setProfileView("registration"));
+  const { loading } = useSelector((state: RootState) => state.auth);
 
   const onFinish = async (values: AuthData) => {
     try {
@@ -87,11 +84,7 @@ const Auth: React.FC = () => {
             rules={[{ required: true, message: "Введите пароль!" }]}
             style={{ marginBottom: "2.5rem" }}
           >
-            <Input
-              prefix={<LockOutlined />}
-              type="password"
-              placeholder="*******"
-            />
+            <Input prefix={<LockOutlined />} type="password" placeholder="*******" />
           </Form.Item>
           <Form.Item>
             {/* <Flex
@@ -122,7 +115,7 @@ const Auth: React.FC = () => {
       </ConfigProvider>
       <footer className={classes.footer}>
         <span>Еще не зарегистрированы? </span>
-        <a onClick={showRegistrationHandler} className={classes.a}>
+        <a onClick={() => setProfileView("registration")} className={classes.a}>
           Создать личный кабинет
         </a>
       </footer>

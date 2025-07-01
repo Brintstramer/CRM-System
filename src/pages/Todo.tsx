@@ -8,10 +8,8 @@ import { Filter, TodoInfo, Todo } from "../types/types";
 import { REFRESH_INTERVAL } from "../constants";
 import { notification } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { getUserData, refreshAccessToken } from "../store/thunks";
-import { AppDispatch } from "../store";
-import { setProfileView } from "../store/ui-slice.ts";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 const TodoPage: React.FC = () => {
   const [taskList, setTaskList] = useState<Todo[]>([]);
@@ -23,12 +21,9 @@ const TodoPage: React.FC = () => {
     inWork: 0,
   });
 
-  const accessToken: string | null = localStorage.getItem("accessToken");
-  const refreshToken: string | null = localStorage.getItem("refreshToken");
-  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-
   const intervalRef = useRef<ReturnType<typeof setInterval>>(null);
+  const { isAuth } = useSelector((state: RootState) => state.auth);
 
   const showError = useCallback((message: string) => {
     notification.error({
@@ -37,29 +32,6 @@ const TodoPage: React.FC = () => {
       placement: "topRight",
     });
   }, []);
-
-  const fetchUserData = async () => {
-    if (!accessToken && !refreshToken) {
-      navigate("/profile");
-      return;
-    }
-
-    if (!accessToken && refreshToken) {
-      try {
-        await dispatch(refreshAccessToken()).unwrap();
-      } catch {
-        navigate("/profile");
-        return;
-      }
-    }
-
-    try {
-      await dispatch(getUserData()).unwrap();
-      dispatch(setProfileView("userData"));
-    } catch {
-      navigate("/profile");
-    }
-  };
 
   const fetchFilteredTaskList = useCallback(async () => {
     setIsFetching(true);
@@ -88,18 +60,20 @@ const TodoPage: React.FC = () => {
   }, [fetchFilteredTaskList, stopRefreshInterval]);
 
   useEffect(() => {
-    const initializeData = async () => {
-      await fetchUserData();
+    const initFetchData = async () => {
+      if (!isAuth) {
+        navigate("/profile");
+        return;
+      }
+
       await fetchFilteredTaskList();
       startRefreshInterval();
     };
 
-    initializeData().catch((error) => {
-      console.error("Ошибка при инициализации данных:", error);
-    });
+    initFetchData();
 
     return stopRefreshInterval;
-  }, [fetchFilteredTaskList, startRefreshInterval, stopRefreshInterval]);
+  }, [isAuth, fetchFilteredTaskList, startRefreshInterval, stopRefreshInterval]);
 
   return (
     <div

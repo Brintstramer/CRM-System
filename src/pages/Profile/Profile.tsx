@@ -1,55 +1,46 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import classes from "../Profile/Profile.module.css";
 import Promo from "../../components/Promo/Promo";
 import Auth from "../../components/Auth/Auth";
 import { useDispatch, useSelector } from "react-redux";
 import Registration from "../../components/Registration/Registration";
 import UserData from "../../components/UserData/UserData";
-import { useEffect } from "react";
-import { getUserData, refreshAccessToken } from "../../store/thunks";
 import { AppDispatch, RootState } from "../../store";
 import Notifications from "../../components/Notifications";
-import { setProfileView } from "../../store/ui-slice";
-import { logout } from "../../store/auth-slice";
-import { ProfileView } from "../../types/types.ts";
+import { logout } from "../../store/auth-slice.ts";
+import { setProfileView } from "../../store/ui-slice.ts";
+import { getUserData, refreshAccessToken } from "../../store/thunks.ts";
 
 const ProfilePage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const profileView: ProfileView = useSelector((state: RootState) => state.ui.profileView);
-  const accessToken: string | null = localStorage.getItem("accessToken");
-  const refreshToken: string | null = localStorage.getItem("refreshToken");
+  const { profileView } = useSelector((state: RootState) => state.ui);
+  const ran = useRef(false);
 
-  const fetchUserData = async () => {
-    if (!accessToken && !refreshToken) {
-      dispatch(logout());
-      dispatch(setProfileView("auth"));
-      return;
-    }
+  useEffect(() => {
+    if (ran.current) return;
+    ran.current = true;
 
-    if (!accessToken && refreshToken) {
-      try {
-        await dispatch(refreshAccessToken()).unwrap();
-      } catch {
+    const initAuth = async () => {
+      const refreshToken: string | null = localStorage.getItem("refreshToken");
+
+      if (!refreshToken) {
         dispatch(logout());
         dispatch(setProfileView("auth"));
         return;
       }
-    }
 
-    try {
-      await dispatch(getUserData()).unwrap();
-      dispatch(setProfileView("userData"));
-    } catch {
-      dispatch(logout());
-      dispatch(setProfileView("auth"));
-    }
-  };
+      try {
+        await dispatch(refreshAccessToken({ refreshToken })).unwrap();
+        await dispatch(getUserData()).unwrap();
+        dispatch(setProfileView("userData"));
+      } catch (error) {
+        dispatch(logout());
+        dispatch(setProfileView("auth"));
+      }
+    };
 
-  useEffect(() => {
-    fetchUserData().catch((error) => {
-      console.error("Ошибка при получении данных пользователя:", error);
-    });
-  }, []);
+    initAuth();
+  }, [dispatch]);
 
   return (
     <div className={classes.profile}>

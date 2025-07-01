@@ -11,9 +11,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-
-
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken)
+  const { isAuth } = useSelector((state: RootState) => state.auth);
   // const dispatch = useDispatch<AppDispatch>();
 
   // if (accessToken) {
@@ -25,7 +23,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   //   }
   // }
 
-  return accessToken ? children : <Navigate to="/profile" replace />;
+  return isAuth ? children : <Navigate to="/profile" replace />;
 };
 
 export default ProtectedRoute;

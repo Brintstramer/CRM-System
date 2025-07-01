@@ -1,8 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AuthData, Profile, ProfileRequest, Token, UserRegistration } from "../types/types";
+import {
+  AuthData,
+  Profile,
+  ProfileRequest,
+  RefreshToken,
+  Token,
+  UserRegistration,
+} from "../types/types";
 import { api } from "../api/api";
-import { RootState } from ".";
 import { handleAxiosError } from "../utils/axiosError";
+import { tokenManager } from "../utils/tokenManager";
 
 export const registerUser = createAsyncThunk<Profile, UserRegistration, { rejectValue: string }>(
   "auth/register",
@@ -15,7 +22,6 @@ export const registerUser = createAsyncThunk<Profile, UserRegistration, { reject
       if (errorMessage.includes("409")) {
         return rejectWithValue("Такой логин уже существует");
       }
-
       return rejectWithValue(errorMessage);
     }
   },
@@ -26,7 +32,7 @@ export const loginUser = createAsyncThunk<Token, AuthData, { rejectValue: string
   async (authData, { rejectWithValue }) => {
     try {
       const { data } = await api.post("/auth/signin", authData);
-      localStorage.setItem("accessToken", data.accessToken);
+      tokenManager.setAccessToken(data);
       localStorage.setItem("refreshToken", data.refreshToken);
       return data;
     } catch (error) {
@@ -34,44 +40,34 @@ export const loginUser = createAsyncThunk<Token, AuthData, { rejectValue: string
       if (errorMessage.includes("401")) {
         return rejectWithValue("Неверные логин или пароль");
       }
-
       return rejectWithValue(errorMessage);
     }
   },
 );
 
-export const getUserData = createAsyncThunk<
-  ProfileRequest,
-  void,
-  { state: RootState; rejectValue: string }
->("auth/getUserData", async (_, { rejectWithValue }) => {
-  try {
-    const { data } = await api.get("/user/profile");
-    return data;
-  } catch (error) {
-    return rejectWithValue(handleAxiosError(error, "Ошибка получения данных пользователя"));
-  }
-});
+export const getUserData = createAsyncThunk<ProfileRequest, void, { rejectValue: string }>(
+  "auth/getUserData",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await api.get("/user/profile");
+      return data;
+    } catch (error) {
+      return rejectWithValue(handleAxiosError(error, "Ошибка получения данных пользователя"));
+    }
+  },
+);
 
-export const refreshAccessToken = createAsyncThunk<
-  Token,
-  void,
-  { state: RootState; rejectValue: string }
->("auth/refreshToken", async (_, { getState, rejectWithValue }) => {
-  const { refreshToken } = getState().auth;
-
-  if (!refreshToken) {
-    return;
-  }
-
-  try {
-    const { data } = await api.post("/auth/refresh", { refreshToken });
-    localStorage.setItem("accessToken", data.accessToken);
-    localStorage.setItem("refreshToken", data.refreshToken);
-    return data;
-  } catch (error) {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    return rejectWithValue("Сессия закончена, авторизуйтесь заново");
-  }
-});
+export const refreshAccessToken = createAsyncThunk<Token, RefreshToken, { rejectValue: string }>(
+  "auth/refreshToken",
+  async (refreshToken, { rejectWithValue }) => {
+    if (!refreshToken) return;
+    try {
+      const { data } = await api.post("/auth/refresh", refreshToken);
+      tokenManager.setAccessToken(data);
+      localStorage.setItem("refreshToken", data.refreshToken);
+      return data;
+    } catch (error) {
+      return rejectWithValue(handleAxiosError(error, "Сессия закончена, авторизуйтесь заново"));
+    }
+  },
+);

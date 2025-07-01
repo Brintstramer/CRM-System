@@ -1,21 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ProfileRequest } from "../types/types";
 import { getUserData, loginUser, refreshAccessToken, registerUser } from "./thunks";
+import { tokenManager } from "../utils/tokenManager";
 
 interface InitialState {
-  loading: boolean;
   userData: ProfileRequest | null;
-  accessToken: string | null;
-  refreshToken: string | null;
+  isAuth: boolean;
+  loading: boolean;
   error: string | null;
   success: boolean;
 }
 
 const initialState: InitialState = {
-  loading: false,
   userData: null,
-  accessToken: localStorage.getItem("accessToken"),
-  refreshToken: localStorage.getItem("refreshToken"),
+  isAuth: false,
+  loading: false,
   error: null,
   success: false,
 };
@@ -25,14 +24,9 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      state.loading = false;
+      tokenManager.clearTokens();
       state.userData = null;
-      state.accessToken = null;
-      state.refreshToken = null;
-      state.error = null;
-      state.success = false;
+      state.isAuth = false;
     },
     clearError: (state) => {
       state.error = null;
@@ -51,45 +45,44 @@ const authSlice = createSlice({
         state.loading = false;
         state.success = true;
       })
-      .addCase(registerUser.rejected, (state, { payload }) => {
+      .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = payload ?? "Ошибка при регистрации";
+        state.error = action.payload ?? "Ошибка при регистрации";
       })
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(loginUser.fulfilled, (state, { payload }) => {
+      .addCase(loginUser.fulfilled, (state) => {
         state.loading = false;
-        state.accessToken = payload.accessToken;
-        state.refreshToken = payload.refreshToken;
+        state.isAuth = true;
         state.success = true;
       })
-      .addCase(loginUser.rejected, (state, { payload }) => {
+      .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = payload ?? "Ошибка при авторизации";
+        state.error = action.payload ?? "Ошибка при авторизации";
+        state.isAuth = false;
       })
       .addCase(getUserData.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getUserData.fulfilled, (state, { payload }) => {
+      .addCase(getUserData.fulfilled, (state, action) => {
         state.loading = false;
-        state.userData = payload;
+        state.userData = action.payload;
       })
-      .addCase(getUserData.rejected, (state, { payload }) => {
+      .addCase(getUserData.rejected, (state, action) => {
         state.loading = false;
-        state.error = payload ?? "Сессия закончилась. Пройдите авторизацию заново.";
-      })
-      .addCase(refreshAccessToken.fulfilled, (state, { payload }) => {
-        state.accessToken = payload.accessToken;
-        state.refreshToken = payload.refreshToken;
-      })
-      .addCase(refreshAccessToken.rejected, (state, { payload }) => {
-        state.accessToken = null;
-        state.refreshToken = null;
+        state.error = action.payload ?? "Сессия закончилась. Пройдите авторизацию заново.";
         state.userData = null;
-        state.error = payload ?? "Сессия закончилась. Пройдите авторизацию заново.";
+        state.isAuth = false;
+      })
+      .addCase(refreshAccessToken.fulfilled, (state) => {
+        state.isAuth = true;
+      })
+      .addCase(refreshAccessToken.rejected, (state, action) => {
+        state.isAuth = false;
+        state.error = action.payload ?? "Сессия закончилась. Пройдите авторизацию заново.";
       });
   },
 });

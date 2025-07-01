@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 
 const UserData: React.FC = () => {
-  const userData = useSelector((state: RootState) => state.auth.userData);
+  const { userData } = useSelector((state: RootState) => state.auth);
 
   const data = [
     { label: "Имя пользователя", value: userData?.username },

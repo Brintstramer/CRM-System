@@ -11,18 +11,12 @@ import { Form, Input, Button, ConfigProvider } from "antd";
 import { registerUser } from "../../store/thunks";
 import { AppDispatch, RootState } from "../../store";
 import { UserRegistration } from "../../types/types";
-import {
-  hideAuthLink,
-  setProfileView,
-  showAuthLink,
-} from "../../store/ui-slice";
+import { hideAuthLink, setProfileView, showAuthLink } from "../../store/ui-slice";
 
 const Registration: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const authLink = useSelector(
-    (state: RootState) => state.ui.authLinkIsVisible
-  );
-  const loading = useSelector((state: RootState) => state.auth.loading);
+  const { authLinkIsVisible } = useSelector((state: RootState) => state.ui);
+  const { loading } = useSelector((state: RootState) => state.auth);
   const [form] = Form.useForm();
 
   const showAuthHandler = (): void => {
@@ -89,8 +83,7 @@ const Registration: React.FC = () => {
                 min: MIN_USERNAME_LENGTH,
                 max: MAX_LENGTH,
                 pattern: /^[a-zA-Zа-яА-ЯёЁ\s]+$/,
-                message:
-                  "Введите от 1 до 60 символов русского/латинского алфавита!",
+                message: "Введите от 1 до 60 символов русского/латинского алфавита!",
               },
             ]}
           >
@@ -142,9 +135,7 @@ const Registration: React.FC = () => {
                   if (!value || getFieldValue("password") === value) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(
-                    new Error("Пароли не совпадают! Попробуйте ещё раз.")
-                  );
+                  return Promise.reject(new Error("Пароли не совпадают! Попробуйте ещё раз."));
                 },
               }),
             ]}
@@ -189,12 +180,12 @@ const Registration: React.FC = () => {
           </Form.Item>
         </Form>
       </ConfigProvider>
-      {authLink && (
+      {authLinkIsVisible && (
         <a onClick={showAuthHandler} className={classes.a}>
           Перейти на страницу авторизации для входа в систему
         </a>
       )}
-      {!authLink && (
+      {!authLinkIsVisible && (
         <footer className={classes.footer}>
           <span>Уже зарегистрированы?</span>
           <a onClick={showAuthHandler} className={classes.a}>

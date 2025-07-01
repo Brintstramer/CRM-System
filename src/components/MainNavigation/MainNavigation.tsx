@@ -11,8 +11,7 @@ import { useCallback } from "react";
 const MainNavigation: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const { isAuth } = useSelector((state: RootState) => state.auth);
 
   const location = useLocation();
   const selectedKey = location.pathname === "/" ? "/todo" : location.pathname;
@@ -23,7 +22,7 @@ const MainNavigation: React.FC = () => {
     navigate("/profile");
   }, [dispatch, navigate]);
 
-  const items: MenuProps["items"] = accessToken
+  const items: MenuProps["items"] = isAuth
     ? [
         {
           key: "/profile",
@@ -58,12 +57,7 @@ const MainNavigation: React.FC = () => {
         },
       }}
     >
-      <Menu
-        className={classes.menu}
-        mode="vertical"
-        selectedKeys={[selectedKey]}
-        items={items}
-      />
+      <Menu className={classes.menu} mode="vertical" selectedKeys={[selectedKey]} items={items} />
     </ConfigProvider>
   );
 };
