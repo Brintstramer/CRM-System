@@ -117,7 +117,7 @@ const Auth: React.FC = () => {
       </ConfigProvider>
       <footer className={classes.footer}>
         <span>Еще не зарегистрированы? </span>
-        <a onClick={() => setProfileView("registration")} className={classes.a}>
+        <a onClick={() => dispatch(setProfileView("registration"))} className={classes.a}>
           Создать личный кабинет
         </a>
       </footer>
