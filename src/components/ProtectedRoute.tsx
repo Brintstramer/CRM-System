@@ -3,25 +3,18 @@ import { Navigate } from "react-router-dom";
 import { ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-
-// import { getUserData } from "../store/thunks";
+import Notifications from "./Notifications";
 
 interface ProtectedRouteProps {
   children: ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuth } = useSelector((state: RootState) => state.auth);
-  // const dispatch = useDispatch<AppDispatch>();
+  const { isAuth, isAuthChecked } = useSelector((state: RootState) => state.auth);
 
-  // if (accessToken) {
-  //   try {
-  //     dispatch(getUserData()).unwrap();
-  //     return children;
-  //   } catch {
-  //     return <Navigate to="/profile" replace />;
-  //   }
-  // }
+  if (!isAuthChecked) {
+    return <Notifications />;
+  }
 
   return isAuth ? children : <Navigate to="/profile" replace />;
 };

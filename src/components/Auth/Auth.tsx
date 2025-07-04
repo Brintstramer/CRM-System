@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AuthData } from "../../types/types";
 import { AppDispatch, RootState } from "../../store";
-import { loginUser } from "../../store/thunks";
+import { getUserData, loginUser } from "../../store/thunks";
 import { setProfileView } from "../../store/ui-slice";
 
 const Auth: React.FC = () => {
@@ -25,6 +25,8 @@ const Auth: React.FC = () => {
   const onFinish = async (values: AuthData) => {
     try {
       await dispatch(loginUser(values)).unwrap();
+      await dispatch(getUserData()).unwrap();
+      dispatch(setProfileView("userData"));
       navigate("/todo");
     } catch (error) {
       console.error(error);

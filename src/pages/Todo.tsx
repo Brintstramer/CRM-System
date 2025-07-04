@@ -7,9 +7,6 @@ import { fetchTasks } from "../api/apiTodo";
 import { Filter, TodoInfo, Todo } from "../types/types";
 import { REFRESH_INTERVAL } from "../constants";
 import { notification } from "antd";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
 
 const TodoPage: React.FC = () => {
   const [taskList, setTaskList] = useState<Todo[]>([]);
@@ -21,9 +18,7 @@ const TodoPage: React.FC = () => {
     inWork: 0,
   });
 
-  const navigate = useNavigate();
   const intervalRef = useRef<ReturnType<typeof setInterval>>(null);
-  const { isAuth } = useSelector((state: RootState) => state.auth);
 
   const showError = useCallback((message: string) => {
     notification.error({
@@ -61,11 +56,6 @@ const TodoPage: React.FC = () => {
 
   useEffect(() => {
     const initFetchData = async () => {
-      if (!isAuth) {
-        navigate("/profile");
-        return;
-      }
-
       await fetchFilteredTaskList();
       startRefreshInterval();
     };
@@ -73,7 +63,7 @@ const TodoPage: React.FC = () => {
     initFetchData();
 
     return stopRefreshInterval;
-  }, [isAuth, fetchFilteredTaskList, startRefreshInterval, stopRefreshInterval]);
+  }, [fetchFilteredTaskList, startRefreshInterval, stopRefreshInterval]);
 
   return (
     <div

@@ -6,6 +6,7 @@ import { tokenManager } from "../utils/tokenManager";
 interface InitialState {
   userData: ProfileRequest | null;
   isAuth: boolean;
+  isAuthChecked: boolean;
   loading: boolean;
   error: string | null;
   success: boolean;
@@ -14,6 +15,7 @@ interface InitialState {
 const initialState: InitialState = {
   userData: null,
   isAuth: false,
+  isAuthChecked: false,
   loading: false,
   error: null,
   success: false,
@@ -27,12 +29,16 @@ const authSlice = createSlice({
       tokenManager.clearTokens();
       state.userData = null;
       state.isAuth = false;
+      state.isAuthChecked = true;
     },
     clearError: (state) => {
       state.error = null;
     },
     resetSuccess: (state) => {
       state.success = false;
+    },
+    setAuthChecked: (state, action) => {
+      state.isAuthChecked = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -77,15 +83,22 @@ const authSlice = createSlice({
         state.userData = null;
         state.isAuth = false;
       })
+      .addCase(refreshAccessToken.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(refreshAccessToken.fulfilled, (state) => {
         state.isAuth = true;
+        state.isAuthChecked = true;
       })
+
       .addCase(refreshAccessToken.rejected, (state, action) => {
         state.isAuth = false;
+        state.isAuthChecked = true;
         state.error = action.payload ?? "Сессия закончилась. Пройдите авторизацию заново.";
       });
   },
 });
 
-export const { logout, clearError, resetSuccess } = authSlice.actions;
+export const { logout, clearError, resetSuccess, setAuthChecked } = authSlice.actions;
 export default authSlice.reducer;
