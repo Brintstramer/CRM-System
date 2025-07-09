@@ -6,7 +6,7 @@ import {
   RefreshToken,
   Token,
   UserRegistration,
-} from "../types/types";
+} from "../types/auth";
 import { api } from "../api/api";
 import { handleAxiosError } from "../utils/axiosError";
 import { tokenManager } from "../utils/tokenManager";

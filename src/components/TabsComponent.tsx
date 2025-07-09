@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs } from "antd";
-import { Filter, TodoInfo } from "../types/types";
+import { Filter, TodoInfo } from "../types/todos";
 
 type TabsProps = {
   setFilter: (filter: Filter) => void;
@@ -8,11 +8,7 @@ type TabsProps = {
   todoInfo: TodoInfo;
 };
 
-const TabsComponent: React.FC<TabsProps> = ({
-  setFilter,
-  filter,
-  todoInfo,
-}) => {
+const TabsComponent: React.FC<TabsProps> = ({ setFilter, filter, todoInfo }) => {
   const items = [
     {
       label: `Все ${todoInfo.all}`,
@@ -28,13 +24,7 @@ const TabsComponent: React.FC<TabsProps> = ({
     },
   ];
 
-  return (
-    <Tabs
-      activeKey={filter}
-      onChange={(key) => setFilter(key as Filter)}
-      items={items}
-    />
-  );
+  return <Tabs activeKey={filter} onChange={(key) => setFilter(key as Filter)} items={items} />;
 };
 
 export default React.memo(TabsComponent);

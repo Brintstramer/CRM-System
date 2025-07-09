@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ProfileRequest } from "../types/types";
+import { ProfileRequest } from "../types/auth";
 import { getUserData, loginUser, refreshAccessToken, registerUser } from "./thunks";
 import { tokenManager } from "../utils/tokenManager";
 
@@ -90,12 +90,14 @@ const authSlice = createSlice({
       .addCase(refreshAccessToken.fulfilled, (state) => {
         state.isAuth = true;
         state.isAuthChecked = true;
+        state.loading = false;
       })
 
       .addCase(refreshAccessToken.rejected, (state, action) => {
         state.isAuth = false;
         state.isAuthChecked = true;
         state.error = action.payload ?? "Сессия закончилась. Пройдите авторизацию заново.";
+        state.loading = false;
       });
   },
 });

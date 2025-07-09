@@ -1,20 +1,20 @@
-import { Token } from "../types/types";
+import { Token } from "../types/auth";
 
-const createTokenManager = () => {
-  let accessToken: string | null;
+class TokenManager {
+  #accessToken: string | null = null;
 
-  return {
-    setAccessToken(tokens: Token) {
-      accessToken = tokens.accessToken;
-    },
-    getAccessToken() {
-      return accessToken;
-    },
-    clearTokens() {
-      accessToken = null;
-      localStorage.removeItem("refreshToken");
-    },
-  };
-};
+  setAccessToken(tokens: Token): void {
+    this.#accessToken = tokens.accessToken;
+  }
 
-export const tokenManager = createTokenManager();
+  getAccessToken(): string | null {
+    return this.#accessToken;
+  }
+
+  clearTokens(): void {
+    this.#accessToken = null;
+    localStorage.removeItem("refreshToken");
+  }
+}
+
+export const tokenManager = new TokenManager();

@@ -1,3 +1,28 @@
+.authPage {
+  height: 100vh;
+  display: flex;
+}
+
+.aside {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  color: #73114b;
+}
+
+.section {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .auth {
   width: 420px;
   display: flex;
@@ -13,7 +38,7 @@
   flex-direction: column;
   gap: 3rem;
   font-weight: 600;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .logo {

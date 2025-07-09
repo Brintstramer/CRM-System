@@ -16,7 +16,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Notifications />;
   }
 
-  return isAuth ? children : <Navigate to="/profile" replace />;
+  return isAuth ? children : <Navigate to="/authorization" replace />;
 };
 
 export default ProtectedRoute;

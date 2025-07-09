@@ -4,7 +4,7 @@ import TabsComponent from "../components/TabsComponent";
 import TaskList from "../components/TaskList/TaskList";
 import { useCallback, useEffect, useState, useRef } from "react";
 import { fetchTasks } from "../api/apiTodo";
-import { Filter, TodoInfo, Todo } from "../types/types";
+import { Filter, TodoInfo, Todo } from "../types/todos";
 import { REFRESH_INTERVAL } from "../constants";
 import { notification } from "antd";
 

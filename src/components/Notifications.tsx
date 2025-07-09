@@ -1,5 +1,5 @@
 import React from "react";
-import { notification, Spin } from "antd";
+import { App as AntdApp, Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { useEffect } from "react";
@@ -8,7 +8,8 @@ import { LoadingOutlined } from "@ant-design/icons";
 
 const Notifications: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, success, error } = useSelector((state: RootState) => state.auth);
+  const { success, error, loading } = useSelector((state: RootState) => state.auth);
+  const { notification } = AntdApp.useApp();
 
   useEffect(() => {
     if (error) {
@@ -19,7 +20,7 @@ const Notifications: React.FC = () => {
       });
       dispatch(clearError());
     }
-  }, [error, dispatch]);
+  }, [error, dispatch, notification]);
 
   useEffect(() => {
     if (success) {
@@ -30,7 +31,7 @@ const Notifications: React.FC = () => {
       });
       dispatch(resetSuccess());
     }
-  }, [success, dispatch]);
+  }, [success, dispatch, notification]);
 
   return (
     <>

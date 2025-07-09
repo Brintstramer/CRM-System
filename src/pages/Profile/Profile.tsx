@@ -1,15 +1,19 @@
 import React from "react";
 import classes from "../Profile/Profile.module.css";
 import Promo from "../../components/Promo/Promo";
-import Auth from "../../components/Auth/Auth";
 import { useSelector } from "react-redux";
-import Registration from "../../components/Registration/Registration";
-import UserData from "../../components/UserData/UserData";
 import { RootState } from "../../store";
 import Notifications from "../../components/Notifications";
+import { List, Typography } from "antd";
 
 const ProfilePage: React.FC = () => {
-  const { profileView } = useSelector((state: RootState) => state.ui);
+  const { userData } = useSelector((state: RootState) => state.auth);
+
+  const data = [
+    { label: "Имя пользователя", value: userData?.username },
+    { label: "Электропочта", value: userData?.email },
+    { label: "Номер телефона", value: userData?.phoneNumber },
+  ];
 
   return (
     <div className={classes.profile}>
@@ -18,9 +22,20 @@ const ProfilePage: React.FC = () => {
       </aside>
       <section className={classes.section}>
         <Notifications />
-        {profileView === "registration" && <Registration />}
-        {profileView === "auth" && <Auth />}
-        {profileView === "userData" && <UserData />}
+        <div className={classes.userData}>
+          <Typography.Title level={2} style={{ color: "#525252", fontWeight: "700" }}>
+            Личные данные
+          </Typography.Title>
+          <List
+            dataSource={data}
+            renderItem={(item) => (
+              <List.Item>
+                <Typography.Text strong>{item.label}: </Typography.Text>
+                <Typography.Text>{item.value || "не заполнено"} </Typography.Text>
+              </List.Item>
+            )}
+          />
+        </div>
       </section>
     </div>
   );

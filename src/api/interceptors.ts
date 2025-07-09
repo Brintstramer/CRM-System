@@ -1,7 +1,7 @@
 import { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import store from "../store";
 import { refreshAccessToken } from "../store/thunks";
-import { Token } from "../types/types.ts";
+import { Token } from "../types/auth.ts";
 import { tokenManager } from "../utils/tokenManager.ts";
 
 let refreshTokenPromise: Promise<Token> | null = null;

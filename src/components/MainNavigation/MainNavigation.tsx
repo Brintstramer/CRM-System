@@ -1,9 +1,8 @@
 import React from "react";
 import classes from "./MainNavigation.module.css";
-import { Menu, ConfigProvider, MenuProps } from "antd";
+import { Menu, MenuProps } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { setProfileView } from "../../store/ui-slice";
 import { RootState } from "../../store";
 import { logout } from "../../store/auth-slice";
 import { useCallback } from "react";
@@ -18,8 +17,7 @@ const MainNavigation: React.FC = () => {
 
   const handleLogout = useCallback(() => {
     dispatch(logout());
-    dispatch(setProfileView("auth"));
-    navigate("/profile");
+    navigate("/authorization");
   }, [dispatch, navigate]);
 
   const items: MenuProps["items"] = isAuth
@@ -45,20 +43,7 @@ const MainNavigation: React.FC = () => {
     : [];
 
   return (
-    <ConfigProvider
-      theme={{
-        token: { colorPrimary: "#7f265b" },
-        components: {
-          Menu: {
-            itemSelectedBg: "#7f265b20",
-            itemSelectedColor: "#7f265b",
-            itemHoverBg: "#7f265b10",
-          },
-        },
-      }}
-    >
-      <Menu className={classes.menu} mode="vertical" selectedKeys={[selectedKey]} items={items} />
-    </ConfigProvider>
+    <Menu className={classes.menu} mode="vertical" selectedKeys={[selectedKey]} items={items} />
   );
 };
 

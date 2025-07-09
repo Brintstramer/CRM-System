@@ -4,6 +4,8 @@ import RootLayout from "./pages/Root";
 import ProfilePage from "./pages/Profile/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useInitAuth } from "./hooks/useInitAuth";
+import AuthorizationPage from "./pages/Authorization/Authorization";
+import RegistrationPage from "./pages/RegistrationPage/Registration";
 
 const router = createBrowserRouter([
   {
@@ -14,9 +16,15 @@ const router = createBrowserRouter([
         index: true,
         element: <Navigate to="/todo" replace />,
       },
+      { path: "authorization", element: <AuthorizationPage /> },
+      { path: "registration", element: <RegistrationPage /> },
       {
         path: "profile",
-        element: <ProfilePage />,
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "todo",
