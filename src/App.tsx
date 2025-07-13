@@ -1,16 +1,17 @@
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import TodoPage from "./pages/Todo";
-import RootLayout from "./pages/Root";
-import ProfilePage from "./pages/Profile";
+import AppLayout from "./layouts/AppLayout";
+import ProfilePage from "./pages/Profile/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { useInitAuth } from "./hooks/useInitAuth";
+import AuthorizationPage from "./pages/Authorization/Authorization";
+import RegistrationPage from "./pages/RegistrationPage/Registration";
+import AuthLayout from "./layouts/AuthLayout";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout />,
+    element: <AppLayout />,
     children: [
       {
         index: true,
@@ -18,17 +19,34 @@ const router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <ProfilePage />,
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "todo",
-        element: <TodoPage />,
+        element: (
+          <ProtectedRoute>
+            <TodoPage />
+          </ProtectedRoute>
+        ),
       },
+    ],
+  },
+  {
+    element: <AuthLayout />,
+    children: [
+      { path: "authorization", element: <AuthorizationPage /> },
+      { path: "registration", element: <RegistrationPage /> },
     ],
   },
 ]);
 
 const App = () => {
+  useInitAuth();
+
   return <RouterProvider router={router} />;
 };
 

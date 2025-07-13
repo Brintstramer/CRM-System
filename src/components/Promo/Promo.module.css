@@ -1,0 +1,16 @@
+.promo {
+  height: 88%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.img {
+  height: 90%;
+}
+
+.slogan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

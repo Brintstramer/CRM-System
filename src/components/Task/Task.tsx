@@ -1,7 +1,8 @@
+import React from "react";
 import "../Task/Task.css";
 import { useState } from "react";
 import { api } from "../../api/api";
-import { Todo } from "../../types/types";
+import { Todo } from "../../types/todos";
 import { Form, Space, Button, Checkbox, Typography, Tooltip } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useForm } from "antd/es/form/Form";
@@ -28,7 +29,7 @@ const Task: React.FC<TaskProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const { Text } = Typography;
 
-  const handleEditClick = () => {
+  const handleEditClick: () => void = () => {
     form.setFieldsValue({ title: task.title });
     setIsEditing(true);
     stopRefreshInterval();
@@ -39,46 +40,33 @@ const Task: React.FC<TaskProps> = ({
     startRefreshInterval();
   };
 
-  const handleDeleteTask = async (id: number) => {
+  const handleDeleteTask = async (id: number): Promise<void> => {
     try {
-      await api.delete(`/${id}`);
+      await api.delete(`/todos/${id}`);
       await fetchFilteredTaskList();
     } catch (error: unknown) {
-      showError(
-        error instanceof Error ? error.message : "Не получилсь удалить задачу."
-      );
+      showError(error instanceof Error ? error.message : "Не получилсь удалить задачу.");
     }
   };
 
   const handleChangeTaskStatus = async (id: number, status: boolean) => {
     try {
-      await api.put(`/${id}`, { isDone: !status });
+      await api.put(`/todos/${id}`, { isDone: !status });
       await fetchFilteredTaskList();
     } catch (error: unknown) {
-      showError(
-        error instanceof Error
-          ? error.message
-          : "Не получилось изменить статус задачи."
-      );
+      showError(error instanceof Error ? error.message : "Не получилось изменить статус задачи.");
     }
   };
 
-  const handleChangeTaskTitle = async (
-    id: number,
-    { title }: { title: string }
-  ) => {
+  const handleChangeTaskTitle = async (id: number, { title }: { title: string }) => {
     try {
       setLoading(true);
-      await api.put(`/${id}`, { title });
+      await api.put(`/todos/${id}`, { title });
       await fetchFilteredTaskList();
       setIsEditing(false);
       startRefreshInterval();
     } catch (error: unknown) {
-      showError(
-        error instanceof Error
-          ? error.message
-          : "Не получилось изменить задачу."
-      );
+      showError(error instanceof Error ? error.message : "Не получилось изменить задачу.");
     } finally {
       setLoading(false);
     }
@@ -86,10 +74,7 @@ const Task: React.FC<TaskProps> = ({
 
   if (isEditing) {
     return (
-      <Form
-        form={form}
-        onFinish={(values) => handleChangeTaskTitle(task.id, values)}
-      >
+      <Form form={form} onFinish={(values) => handleChangeTaskTitle(task.id, values)}>
         <Form.Item
           name="title"
           rules={[
@@ -107,12 +92,7 @@ const Task: React.FC<TaskProps> = ({
           <TextArea autoFocus rows={3} />
         </Form.Item>
         <Space>
-          <Button
-            color="orange"
-            variant="solid"
-            htmlType="submit"
-            loading={loading}
-          >
+          <Button color="orange" variant="solid" htmlType="submit" loading={loading}>
             Cохранить
           </Button>
           <Button color="orange" variant="outlined" onClick={handleCancelEdit}>
@@ -125,10 +105,7 @@ const Task: React.FC<TaskProps> = ({
 
   return (
     <div className="task">
-      <Checkbox
-        checked={task.isDone}
-        onChange={() => handleChangeTaskStatus(task.id, task.isDone)}
-      >
+      <Checkbox checked={task.isDone} onChange={() => handleChangeTaskStatus(task.id, task.isDone)}>
         <Text delete={task.isDone}>{task.title}</Text>
       </Checkbox>
       <Space>

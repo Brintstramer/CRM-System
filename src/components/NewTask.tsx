@@ -1,3 +1,4 @@
+import React from "react";
 import { Button, Form, Input } from "antd";
 import { api } from "../api/api";
 import { MAX_TITLE_LENGTH, MIN_TITLE_LENGTH } from "../constants";
@@ -18,7 +19,7 @@ const NewTask: React.FC<NewTaskProps> = ({
   const handleAddNewTask = async ({ title }: { title: string }) => {
     try {
       setLoading(true);
-      await api.post("", { title });
+      await api.post("/todos", { title });
       await fetchFilteredTaskList();
       form.resetFields();
     } catch (error: unknown) {

@@ -4,13 +4,6 @@
 }
 
 body {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   background: linear-gradient(to right, #ece9e6, #ffffff);
-}
-
-#root {
-  height: 100%;
-  padding: 2rem 2rem 2rem 8rem;
-  display: grid;
-  grid-template-columns: 10% 90%;
 }

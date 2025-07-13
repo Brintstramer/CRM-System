@@ -1,9 +1,10 @@
+import React from "react";
 import NewTask from "../components/NewTask";
 import TabsComponent from "../components/TabsComponent";
 import TaskList from "../components/TaskList/TaskList";
 import { useCallback, useEffect, useState, useRef } from "react";
 import { fetchTasks } from "../api/apiTodo";
-import { Filter, TodoInfo, Todo } from "../types/types";
+import { Filter, TodoInfo, Todo } from "../types/todos";
 import { REFRESH_INTERVAL } from "../constants";
 import { notification } from "antd";
 
@@ -35,11 +36,7 @@ const TodoPage: React.FC = () => {
       setTaskList(data);
       setTodoInfo(info);
     } catch (error: unknown) {
-      showError(
-        error instanceof Error
-          ? error.message
-          : "Не получилось загрузить список задач."
-      );
+      showError(error instanceof Error ? error.message : "Не получилось загрузить список задач.");
     } finally {
       setIsFetching(false);
     }
@@ -58,8 +55,12 @@ const TodoPage: React.FC = () => {
   }, [fetchFilteredTaskList, stopRefreshInterval]);
 
   useEffect(() => {
-    fetchFilteredTaskList();
-    startRefreshInterval();
+    const initFetchData = async () => {
+      await fetchFilteredTaskList();
+      startRefreshInterval();
+    };
+
+    initFetchData();
 
     return stopRefreshInterval;
   }, [fetchFilteredTaskList, startRefreshInterval, stopRefreshInterval]);
@@ -73,15 +74,8 @@ const TodoPage: React.FC = () => {
         margin: "0 auto",
       }}
     >
-      <NewTask
-        fetchFilteredTaskList={fetchFilteredTaskList}
-        showError={showError}
-      />
-      <TabsComponent
-        setFilter={setFilter}
-        todoInfo={todoInfo}
-        filter={filter}
-      />
+      <NewTask fetchFilteredTaskList={fetchFilteredTaskList} showError={showError} />
+      <TabsComponent setFilter={setFilter} todoInfo={todoInfo} filter={filter} />
 
       <TaskList
         taskList={taskList}

@@ -1,0 +1,26 @@
+export interface Todo {
+  id: number;
+  title: string;
+  created: string;
+  isDone: boolean;
+}
+
+export interface TodoInfo {
+  all: number;
+  completed: number;
+  inWork: number;
+}
+
+export interface MetaResponse<T, N> {
+  data: T[];
+  info: N;
+  meta: {
+    totalAmount: number;
+  };
+}
+
+export enum Filter {
+  All = "all",
+  InWork = "inWork",
+  Completed = "completed",
+}
