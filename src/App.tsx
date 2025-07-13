@@ -1,23 +1,22 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import TodoPage from "./pages/Todo";
-import RootLayout from "./pages/Root";
+import AppLayout from "./layouts/AppLayout";
 import ProfilePage from "./pages/Profile/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useInitAuth } from "./hooks/useInitAuth";
 import AuthorizationPage from "./pages/Authorization/Authorization";
 import RegistrationPage from "./pages/RegistrationPage/Registration";
+import AuthLayout from "./layouts/AuthLayout";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout />,
+    element: <AppLayout />,
     children: [
       {
         index: true,
         element: <Navigate to="/todo" replace />,
       },
-      { path: "authorization", element: <AuthorizationPage /> },
-      { path: "registration", element: <RegistrationPage /> },
       {
         path: "profile",
         element: (
@@ -34,6 +33,13 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+    ],
+  },
+  {
+    element: <AuthLayout />,
+    children: [
+      { path: "authorization", element: <AuthorizationPage /> },
+      { path: "registration", element: <RegistrationPage /> },
     ],
   },
 ]);
