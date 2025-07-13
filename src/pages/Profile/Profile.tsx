@@ -1,9 +1,9 @@
 import React from "react";
 import classes from "../Profile/Profile.module.css";
-import Promo from "../../components/Promo/Promo";
+import Promo from "../../components/Auth/Promo/Promo";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import Notifications from "../../components/Notifications";
+import Notifications from "../../components/Auth/Notifications/Notifications";
 import { List, Typography } from "antd";
 
 const ProfilePage: React.FC = () => {

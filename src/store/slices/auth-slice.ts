@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ProfileRequest } from "../types/auth";
-import { getUserData, loginUser, refreshAccessToken, registerUser } from "./thunks";
-import { tokenManager } from "../utils/tokenManager";
+import { ProfileRequest } from "../../types/auth";
+import { getUserData, loginUser, refreshAccessToken, registerUser } from "../thunks/auth-thunk";
+import { tokenManager } from "../../utils/tokenManager";
 
 interface InitialState {
   userData: ProfileRequest | null;

@@ -1,6 +1,6 @@
 import { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import store from "../store";
-import { refreshAccessToken } from "../store/thunks";
+import { refreshAccessToken } from "../store/thunks/auth-thunk.ts";
 import { Token } from "../types/auth.ts";
 import { tokenManager } from "../utils/tokenManager.ts";
 

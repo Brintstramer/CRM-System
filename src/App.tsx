@@ -1,11 +1,12 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
-import TodoPage from "./pages/Todo";
+import TodoPage from "./pages/Todo/Todo";
 import AppLayout from "./layouts/AppLayout";
 import ProfilePage from "./pages/Profile/Profile";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import { useInitAuth } from "./hooks/useInitAuth";
 import AuthorizationPage from "./pages/Authorization/Authorization";
 import RegistrationPage from "./pages/RegistrationPage/Registration";
+import Users from "./pages/Users/Users";
 import AuthLayout from "./layouts/AuthLayout";
 
 const router = createBrowserRouter([
@@ -30,6 +31,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <TodoPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "users",
+        element: (
+          <ProtectedRoute>
+            <Users />
           </ProtectedRoute>
         ),
       },

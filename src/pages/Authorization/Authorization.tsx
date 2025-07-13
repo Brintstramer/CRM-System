@@ -13,9 +13,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AuthData } from "../../types/auth";
 import { AppDispatch, RootState } from "../../store";
-import { getUserData, loginUser } from "../../store/thunks";
-import Promo from "../../components/Promo/Promo";
-import Notifications from "../../components/Notifications";
+import { getUserData, loginUser } from "../../store/thunks/auth-thunk";
+import Promo from "../../components/Auth/Promo/Promo";
+import Notifications from "../../components/Auth/Notifications/Notifications";
 
 const AuthorizationPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

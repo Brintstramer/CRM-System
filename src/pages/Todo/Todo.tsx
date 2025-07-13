@@ -1,11 +1,11 @@
 import React from "react";
-import NewTask from "../components/NewTask";
-import TabsComponent from "../components/TabsComponent";
-import TaskList from "../components/TaskList/TaskList";
+import NewTask from "../../components/Todos/NewTask/NewTask";
+import TabsComponent from "../../components/Todos/TabsComponent/TabsComponent";
+import TaskList from "../../components/Todos/TaskList/TaskList";
 import { useCallback, useEffect, useState, useRef } from "react";
-import { fetchTasks } from "../api/apiTodo";
-import { Filter, TodoInfo, Todo } from "../types/todos";
-import { REFRESH_INTERVAL } from "../constants";
+import { fetchTasks } from "../../api/apiTodo";
+import { Filter, TodoInfo, Todo } from "../../types/todos";
+import { REFRESH_INTERVAL } from "../../constants";
 import { notification } from "antd";
 
 const TodoPage: React.FC = () => {

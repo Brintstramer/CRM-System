@@ -6,10 +6,10 @@ import {
   RefreshToken,
   Token,
   UserRegistration,
-} from "../types/auth";
-import { api } from "../api/api";
-import { handleAxiosError } from "../utils/axiosError";
-import { tokenManager } from "../utils/tokenManager";
+} from "../../types/auth";
+import { api } from "../../api/api";
+import { handleAxiosError } from "../../utils/axiosError";
+import { tokenManager } from "../../utils/tokenManager";
 
 export const registerUser = createAsyncThunk<Profile, UserRegistration, { rejectValue: string }>(
   "auth/register",

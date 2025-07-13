@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Form, Input } from "antd";
-import { api } from "../api/api";
-import { MAX_TITLE_LENGTH, MIN_TITLE_LENGTH } from "../constants";
+import { api } from "../../../api/api";
+import { MAX_TITLE_LENGTH, MIN_TITLE_LENGTH } from "../../../constants";
 import { useState } from "react";
 
 type NewTaskProps = {
@@ -9,10 +9,7 @@ type NewTaskProps = {
   showError: (error: string) => void;
 };
 
-const NewTask: React.FC<NewTaskProps> = ({
-  fetchFilteredTaskList,
-  showError,
-}) => {
+const NewTask: React.FC<NewTaskProps> = ({ fetchFilteredTaskList, showError }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -23,9 +20,7 @@ const NewTask: React.FC<NewTaskProps> = ({
       await fetchFilteredTaskList();
       form.resetFields();
     } catch (error: unknown) {
-      showError(
-        error instanceof Error ? error.message : "Не получилось создать задачу."
-      );
+      showError(error instanceof Error ? error.message : "Не получилось создать задачу.");
     } finally {
       setLoading(false);
     }
