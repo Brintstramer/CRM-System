@@ -103,6 +103,7 @@ const usersSlice = createSlice({
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.loading = false;
         state.users = state.users.filter((user) => user.id !== action.meta.arg);
+        state.total = Math.max(0, state.total - 1);
         state.success = true;
       })
       .addCase(deleteUser.rejected, (state, action) => {
