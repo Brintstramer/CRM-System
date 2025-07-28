@@ -3,7 +3,7 @@
 export interface UserFilters {
   search?: string;
   sortBy?: string;
-  sordOrder?: "asc" | "desc";
+  sortOrder?: "asc" | "desc";
   isBlocked?: boolean;
   limit?: number; // сколько на странице
   offset?: number; // страницу
@@ -53,3 +53,7 @@ export interface UserRequest {
   email?: string;
   phoneNumber?: string;
 }
+
+// Интерфейс для модального окна
+
+export type ModalAction = "delete" | "block" | "unblock" | "changeRole";

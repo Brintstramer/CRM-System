@@ -12,9 +12,8 @@ import { registerUser } from "../../store/thunks/auth-thunk";
 import { AppDispatch, RootState } from "../../store";
 import { UserRegistration } from "../../types/auth";
 import { showAuthLink } from "../../store/slices/ui-slice";
-import Promo from "../../components/Auth/Promo/Promo";
+import Promo from "../../components/Promo/Promo";
 import { useNavigate } from "react-router-dom";
-import Notifications from "../../components/Auth/Notifications/Notifications";
 
 const RegistrationPage: React.FC = () => {
   const navigate = useNavigate();
@@ -45,7 +44,6 @@ const RegistrationPage: React.FC = () => {
         <Promo />
       </aside>
       <section className={classes.section}>
-        <Notifications />
         <div className={classes.registration}>
           <header className={classes.header}>
             <h1>Пройдите регистрацию</h1>

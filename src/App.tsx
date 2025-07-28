@@ -1,13 +1,15 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
-import TodoPage from "./pages/Todo/Todo";
+import TodoPage from "./pages/Todos/Todos";
 import AppLayout from "./layouts/AppLayout";
 import ProfilePage from "./pages/Profile/Profile";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import { useInitAuth } from "./hooks/useInitAuth";
 import AuthorizationPage from "./pages/Authorization/Authorization";
 import RegistrationPage from "./pages/RegistrationPage/Registration";
-import Users from "./pages/Users/Users";
 import AuthLayout from "./layouts/AuthLayout";
+import User from "./pages/User/User";
+import UsersTable from "./pages/UsersTable/UsersTable";
+import Notifications from "./components/Notifications/Notifications";
 
 const router = createBrowserRouter([
   {
@@ -38,7 +40,15 @@ const router = createBrowserRouter([
         path: "users",
         element: (
           <ProtectedRoute>
-            <Users />
+            <UsersTable />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "users/:id",
+        element: (
+          <ProtectedRoute>
+            <User />
           </ProtectedRoute>
         ),
       },
@@ -56,7 +66,12 @@ const router = createBrowserRouter([
 const App = () => {
   useInitAuth();
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <Notifications />
+      <RouterProvider router={router} />
+    </>
+  );
 };
 
 export default App;

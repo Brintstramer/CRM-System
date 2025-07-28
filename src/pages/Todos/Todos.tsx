@@ -8,7 +8,7 @@ import { Filter, TodoInfo, Todo } from "../../types/todos";
 import { REFRESH_INTERVAL } from "../../constants";
 import { notification } from "antd";
 
-const TodoPage: React.FC = () => {
+const TodosPage: React.FC = () => {
   const [taskList, setTaskList] = useState<Todo[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [filter, setFilter] = useState<Filter>(Filter.All);
@@ -68,10 +68,11 @@ const TodoPage: React.FC = () => {
   return (
     <div
       style={{
-        maxWidth: "35rem",
+        width: "35rem",
         height: "100%",
         paddingTop: "2rem",
         margin: "0 auto",
+        marginTop: "2rem",
       }}
     >
       <NewTask fetchFilteredTaskList={fetchFilteredTaskList} showError={showError} />
@@ -91,4 +92,4 @@ const TodoPage: React.FC = () => {
   );
 };
 
-export default TodoPage;
+export default TodosPage;

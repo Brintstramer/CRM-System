@@ -24,6 +24,10 @@ const MainNavigation: React.FC = () => {
       label: <NavLink to="/profile">Профиль</NavLink>,
     },
     {
+      key: "/users",
+      label: <NavLink to="/users">Пользователи</NavLink>,
+    },
+    {
       key: "/todo",
       label: <NavLink to="/todo">Список задач</NavLink>,
     },
