@@ -7,9 +7,9 @@ import { useInitAuth } from "./hooks/useInitAuth";
 import AuthorizationPage from "./pages/Authorization/Authorization";
 import RegistrationPage from "./pages/RegistrationPage/Registration";
 import AuthLayout from "./layouts/AuthLayout";
-import User from "./pages/User/User";
-import UsersTable from "./pages/UsersTable/UsersTable";
 import Notifications from "./components/Notifications/Notifications";
+import UsersTablePage from "./pages/UsersTable/UsersTable";
+import UserPage from "./pages/User/User";
 
 const router = createBrowserRouter([
   {
@@ -40,7 +40,7 @@ const router = createBrowserRouter([
         path: "users",
         element: (
           <ProtectedRoute>
-            <UsersTable />
+            <UsersTablePage />
           </ProtectedRoute>
         ),
       },
@@ -48,7 +48,7 @@ const router = createBrowserRouter([
         path: "users/:id",
         element: (
           <ProtectedRoute>
-            <User />
+            <UserPage />
           </ProtectedRoute>
         ),
       },

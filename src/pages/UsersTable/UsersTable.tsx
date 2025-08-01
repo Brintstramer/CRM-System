@@ -15,12 +15,12 @@ import BlockingFilter from "../../components/UsersTable/BlockingFilter/BlockingF
 import { getUsersTableColumns } from "../../components/UsersTable/Columns/сolumns";
 import { useEditRoles } from "../../hooks/useEditRoles";
 
-const UsersTable: FC = () => {
+const UsersTablePage: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { users, filters, loading, total } = useSelector((state: RootState) => state.users);
   const { open, action, user } = useSelector((state: RootState) => state.modal);
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(filters.search);
   const debouncedSearch = useDebounce(searchTerm, 500);
 
   const {
@@ -159,4 +159,4 @@ const UsersTable: FC = () => {
   );
 };
 
-export default UsersTable;
+export default UsersTablePage;

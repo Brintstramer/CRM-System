@@ -7,14 +7,15 @@ import { fetchUser, updateUser } from "../../store/thunks/users-thunk";
 import { Button, Flex, Form, Input, List, Typography } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { MAX_LENGTH, MIN_USERNAME_LENGTH } from "../../constants";
+import { UserRequest } from "../../types/users";
 
-const User: FC = () => {
+const UserPage: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
   const { user } = useSelector((state: RootState) => state.users);
   const [isEditing, setIsEditing] = useState(false);
-  const [form] = useForm();
-  const navigate = useNavigate();
+  const [form] = useForm<UserRequest>();
 
   const data = [
     { label: "Имя пользователя", value: user?.username },
@@ -23,17 +24,15 @@ const User: FC = () => {
   ];
 
   useEffect(() => {
-    const loadUser = async () => {
+    (async () => {
       try {
         if (id) {
           await dispatch(fetchUser(id)).unwrap();
         }
       } catch (error) {
-        console.error("Ошшшибка загрузки пользователя", error);
+        console.error("Ошибка загрузки данных пользователя", error);
       }
-    };
-
-    loadUser();
+    })();
   }, [id, dispatch]);
 
   useEffect(() => {
@@ -46,11 +45,24 @@ const User: FC = () => {
 
   const onSave = async () => {
     try {
+      if (!user || !id) return;
+
       const values = await form.validateFields();
+      const changedFields: Partial<UserRequest> = {};
 
-      if (!id) return;
+      for (const key in values) {
+        const typedKey = key as keyof UserRequest;
+        if (values[typedKey] !== user[typedKey]) {
+          changedFields[typedKey] = values[typedKey];
+        }
+      }
 
-      await dispatch(updateUser({ id, data: values })).unwrap();
+      if (Object.keys(changedFields).length === 0) {
+        setIsEditing(false);
+        return;
+      }
+
+      await dispatch(updateUser({ id, data: changedFields })).unwrap();
       setIsEditing(false);
     } catch (error) {
       console.error("Ошибка обновления данных пользователя", error);
@@ -75,7 +87,7 @@ const User: FC = () => {
       {!isEditing && (
         <>
           <Flex justify="center" gap={20}>
-            <Button type="default" onClick={() => navigate("/users")}>
+            <Button type="default" onClick={() => navigate(-1)}>
               Вернуться
             </Button>
             <Button type="primary" onClick={() => setIsEditing(true)}>
@@ -146,4 +158,4 @@ const User: FC = () => {
   );
 };
 
-export default User;
+export default UserPage;
