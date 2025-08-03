@@ -136,6 +136,7 @@ const UserPage: FC = () => {
           label="Номер телефона"
           rules={[
             {
+              required: true,
               pattern: /^(\+7[0-9]{10})$/,
               message: "Введите корректный номер телефона!",
             },
