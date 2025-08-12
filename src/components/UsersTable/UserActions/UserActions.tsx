@@ -37,7 +37,9 @@ const UserActions: FC<UserActionsProps> = ({
   onOpenModal,
 }) => {
   const handleChangeRole = (role: Roles[]) => {
-    if (role.length === 0) return;
+    if (role.length === 0) {
+      return;
+    }
     onChangeRoles(role);
   };
 

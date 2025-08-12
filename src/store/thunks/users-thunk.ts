@@ -8,7 +8,7 @@ interface UpdateUserArgs {
   data: UserRequest;
 }
 
-interface updateRoleArgs {
+interface UpdateRoleArgs {
   id: number;
   data: UserRolesRequest;
 }
@@ -88,7 +88,7 @@ export const unblockUser = createAsyncThunk<User, number, { rejectValue: string 
   },
 );
 
-export const updateRole = createAsyncThunk<User, updateRoleArgs, { rejectValue: string }>(
+export const updateRole = createAsyncThunk<User, UpdateRoleArgs, { rejectValue: string }>(
   "users/updateRole",
   async ({ id, data }, { rejectWithValue }) => {
     try {

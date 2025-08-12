@@ -48,11 +48,7 @@ export interface UserRolesRequest {
 
 // Интерфейс для обновления данных пользователя
 
-export interface UserRequest {
-  username?: string;
-  email?: string;
-  phoneNumber?: string;
-}
+export type UserRequest = Partial<Pick<User, "username" | "email" | "phoneNumber">>;
 
 // Интерфейс для модального окна
 

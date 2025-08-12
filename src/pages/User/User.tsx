@@ -6,7 +6,12 @@ import { FC, useEffect, useState } from "react";
 import { fetchUser, updateUser } from "../../store/thunks/users-thunk";
 import { Button, Flex, Form, Input, List, Typography } from "antd";
 import { useForm } from "antd/es/form/Form";
-import { MAX_LENGTH, MIN_USERNAME_LENGTH } from "../../constants";
+import {
+  MAX_LENGTH,
+  MIN_USERNAME_LENGTH,
+  PHONE_NUMBER_PATTERN,
+  USERNAME_PATTERN,
+} from "../../constants";
 import { UserRequest } from "../../types/users";
 
 const UserPage: FC = () => {
@@ -14,7 +19,7 @@ const UserPage: FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
   const { user } = useSelector((state: RootState) => state.users);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [form] = useForm<UserRequest>();
 
   const data = [
@@ -43,19 +48,26 @@ const UserPage: FC = () => {
     }
   }, [user, form]);
 
-  const onSave = async () => {
-    try {
-      if (!user || !id) return;
-
-      const values = await form.validateFields();
-      const changedFields: Partial<UserRequest> = {};
-
-      for (const key in values) {
-        const typedKey = key as keyof UserRequest;
-        if (values[typedKey] !== user[typedKey]) {
-          changedFields[typedKey] = values[typedKey];
-        }
+  const getChangedFields = <T extends UserRequest>(
+    original: T,
+    updated: Partial<T>,
+  ): Partial<T> => {
+    const changedFields: Partial<T> = {};
+    for (const key in updated) {
+      if (updated[key] !== original[key]) {
+        changedFields[key] = updated[key];
       }
+    }
+    return changedFields;
+  };
+
+  const onSave = async (values: UserRequest) => {
+    try {
+      if (!user || !id) {
+        return;
+      }
+
+      const changedFields = getChangedFields(user, values);
 
       if (Object.keys(changedFields).length === 0) {
         setIsEditing(false);
@@ -109,10 +121,16 @@ const UserPage: FC = () => {
             {
               required: true,
               whitespace: true,
+              message: "Имя пользователя обязательно",
+            },
+            {
               min: MIN_USERNAME_LENGTH,
               max: MAX_LENGTH,
-              pattern: /^[a-zA-Zа-яА-ЯёЁ\s]+$/,
-              message: "Введите от 1 до 60 символов русского/латинского алфавита!",
+              message: `Введите от ${MIN_USERNAME_LENGTH} до ${MAX_LENGTH} символов!`,
+            },
+            {
+              pattern: USERNAME_PATTERN,
+              message: "Допустимы только буквы русского и латинского алфавита",
             },
           ]}
         >
@@ -137,7 +155,7 @@ const UserPage: FC = () => {
           rules={[
             {
               required: true,
-              pattern: /^(\+7[0-9]{10})$/,
+              pattern: PHONE_NUMBER_PATTERN,
               message: "Введите корректный номер телефона!",
             },
           ]}

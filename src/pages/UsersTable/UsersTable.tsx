@@ -9,18 +9,21 @@ import { setFilters } from "../../store/slices/users-slice";
 import { FilterValue, SorterResult, TablePaginationConfig } from "antd/es/table/interface";
 import { useDebounce } from "../../hooks/useDebounce";
 import { SearchOutlined } from "@ant-design/icons";
-import CustomModal from "../../components/CustomModal/CustomModal";
-import { closeModal, openModal } from "../../store/slices/modal-slice";
 import BlockingFilter from "../../components/UsersTable/BlockingFilter/BlockingFilter";
 import { getUsersTableColumns } from "../../components/UsersTable/Columns/сolumns";
 import { useEditRoles } from "../../hooks/useEditRoles";
+import DeleteModal from "../../components/CustomModals/DeleteModal";
+import BlockModal from "../../components/CustomModals/BlockModal";
+import UnblockModal from "../../components/CustomModals/UnblockModal";
+import ChangeRoleModal from "../../components/CustomModals/ChangeRoleModal";
 
 const UsersTablePage: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { users, filters, loading, total } = useSelector((state: RootState) => state.users);
-  const { open, action, user } = useSelector((state: RootState) => state.modal);
-
-  const [searchTerm, setSearchTerm] = useState(filters.search);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [modalAction, setModalAction] = useState<ModalAction | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string | undefined>(filters.search);
   const debouncedSearch = useDebounce(searchTerm, 500);
 
   const {
@@ -58,7 +61,10 @@ const UsersTablePage: FC = () => {
     const offset = (pagination.current ?? 1) - 1;
     dispatch(
       setFilters({
-        sortBy: typeof singleSorter.field === "string" ? singleSorter.field : undefined,
+        sortBy:
+          singleSorter.field === "username" || singleSorter.field === "email"
+            ? singleSorter.field
+            : undefined,
         sortOrder:
           singleSorter.order === "ascend"
             ? "asc"
@@ -72,34 +78,43 @@ const UsersTablePage: FC = () => {
   };
 
   const handleOpenModal = (user: User, action: ModalAction) => {
-    dispatch(openModal({ user, action }));
+    setSelectedUser(user);
+    setModalAction(action);
+    setModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    dispatch(closeModal());
+    setModalOpen(false);
+    setSelectedUser(null);
+    setModalAction(null);
   };
 
   const handleModalConfirm = async () => {
-    if (!user || !action) return;
+    if (!selectedUser || !modalAction) {
+      return;
+    }
 
     try {
-      switch (action) {
+      switch (modalAction) {
         case "delete":
-          await dispatch(deleteUser(user.id)).unwrap();
+          await dispatch(deleteUser(selectedUser.id)).unwrap();
           const currentPage = filters.offset ?? 0;
           if (users.length === 1 && currentPage > 0) {
             dispatch(setFilters({ offset: filters.offset! - 1 }));
           }
           break;
         case "block":
-          await dispatch(blockUser(user.id)).unwrap();
+          await dispatch(blockUser(selectedUser.id)).unwrap();
           break;
         case "unblock":
-          await dispatch(unblockUser(user.id)).unwrap();
+          await dispatch(unblockUser(selectedUser.id)).unwrap();
           break;
         case "changeRole":
           if (!editingRoles) break;
-          await saveRoles(user);
+          await saveRoles(selectedUser);
+          break;
+        default:
+          console.error(`Неизвестное действие: ${modalAction}`);
           break;
       }
     } catch (error) {
@@ -147,14 +162,39 @@ const UsersTablePage: FC = () => {
           current: (filters.offset ?? 0) + 1,
         }}
       />
-      <CustomModal
-        user={user}
-        action={action}
-        open={open}
-        onConfirm={handleModalConfirm}
-        onCancel={handleCloseModal}
-        newRoles={editingRoles}
-      />
+      {modalAction === "block" && selectedUser && (
+        <BlockModal
+          user={selectedUser}
+          open={modalOpen}
+          onConfirm={handleModalConfirm}
+          onCancel={handleCloseModal}
+        />
+      )}
+      {modalAction === "unblock" && selectedUser && (
+        <UnblockModal
+          user={selectedUser}
+          open={modalOpen}
+          onConfirm={handleModalConfirm}
+          onCancel={handleCloseModal}
+        />
+      )}
+      {modalAction === "changeRole" && selectedUser && (
+        <ChangeRoleModal
+          user={selectedUser}
+          newRoles={editingRoles}
+          open={modalOpen}
+          onConfirm={handleModalConfirm}
+          onCancel={handleCloseModal}
+        />
+      )}
+      {modalAction === "delete" && selectedUser && (
+        <DeleteModal
+          user={selectedUser}
+          open={modalOpen}
+          onConfirm={handleModalConfirm}
+          onCancel={handleCloseModal}
+        />
+      )}
     </div>
   );
 };

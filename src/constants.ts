@@ -1,7 +1,10 @@
-export const REFRESH_INTERVAL = 5000; // для Todo
-export const MIN_TITLE_LENGTH = 2; // для Todo
-export const MAX_TITLE_LENGTH = 64; // для Todo
-export const MAX_LENGTH = 60; // для Profile
-export const MIN_USERNAME_LENGTH = 1; // для Profile
-export const MIN_LOGIN_LENGTH = 2; // для Profile
-export const MIN_PASSWORD_LENGTH = 6; // для Profile
+export const REFRESH_INTERVAL = 5000;
+export const MIN_TITLE_LENGTH = 2;
+export const MAX_TITLE_LENGTH = 64;
+export const MAX_LENGTH = 60;
+export const MIN_USERNAME_LENGTH = 1;
+export const MIN_LOGIN_LENGTH = 2;
+export const MIN_PASSWORD_LENGTH = 6;
+export const USERNAME_PATTERN = /^[a-zA-Zа-яА-ЯёЁ\s]+$/;
+export const LOGIN_PATTERN = /^[a-zA-Z\s]+$/;
+export const PHONE_NUMBER_PATTERN = /^(\+7[0-9]{10})$/;
