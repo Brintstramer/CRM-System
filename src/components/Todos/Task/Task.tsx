@@ -1,12 +1,12 @@
 import React from "react";
 import "../Task/Task.css";
 import { useState } from "react";
-import { api } from "../../api/api";
-import { Todo } from "../../types/todos";
+import { api } from "../../../api/api";
+import { Todo } from "../../../types/todos";
 import { Form, Space, Button, Checkbox, Typography, Tooltip } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useForm } from "antd/es/form/Form";
-import { MAX_TITLE_LENGTH, MIN_TITLE_LENGTH } from "../../constants";
+import { MAX_TITLE_LENGTH, MIN_TITLE_LENGTH } from "../../../constants";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
 
 type TaskProps = {

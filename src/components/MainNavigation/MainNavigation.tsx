@@ -3,7 +3,7 @@ import classes from "./MainNavigation.module.css";
 import { Menu, MenuProps } from "antd";
 import { useDispatch } from "react-redux";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { logout } from "../../store/auth-slice";
+import { logout } from "../../store/slices/auth-slice";
 import { useCallback } from "react";
 
 const MainNavigation: React.FC = () => {
@@ -24,6 +24,10 @@ const MainNavigation: React.FC = () => {
       label: <NavLink to="/profile">Профиль</NavLink>,
     },
     {
+      key: "/users",
+      label: <NavLink to="/users">Пользователи</NavLink>,
+    },
+    {
       key: "/todo",
       label: <NavLink to="/todo">Список задач</NavLink>,
     },
@@ -37,6 +41,7 @@ const MainNavigation: React.FC = () => {
       style: { color: "#c45c5e" },
     },
   ];
+
   return (
     <Menu className={classes.menu} mode="vertical" selectedKeys={[selectedKey]} items={items} />
   );

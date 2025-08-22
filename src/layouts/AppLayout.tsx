@@ -1,9 +1,16 @@
 import { Outlet } from "react-router-dom";
 import MainNavigation from "../components/MainNavigation/MainNavigation";
 
-const RootLayout = () => {
+const AppLayout = () => {
   return (
-    <div style={{ height: "100vh", display: "grid", gridTemplateColumns: "10% 90%" }}>
+    <div
+      style={{
+        height: "100vh",
+        display: "grid",
+        gridTemplateColumns: "11% 89%",
+        width: "100%",
+      }}
+    >
       <MainNavigation />
       <main>
         <Outlet />
@@ -12,4 +19,4 @@ const RootLayout = () => {
   );
 };
 
-export default RootLayout;
+export default AppLayout;

@@ -13,9 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AuthData } from "../../types/auth";
 import { AppDispatch, RootState } from "../../store";
-import { getUserData, loginUser } from "../../store/thunks";
+import { loginUser } from "../../store/thunks/auth-thunk";
 import Promo from "../../components/Promo/Promo";
-import Notifications from "../../components/Notifications";
 
 const AuthorizationPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,7 +24,6 @@ const AuthorizationPage: React.FC = () => {
   const onFinish = async (values: AuthData) => {
     try {
       await dispatch(loginUser(values)).unwrap();
-      await dispatch(getUserData()).unwrap();
       navigate("/todo");
     } catch (error) {
       console.error(error);
@@ -37,8 +35,8 @@ const AuthorizationPage: React.FC = () => {
       <aside className={classes.aside}>
         <Promo />
       </aside>
+
       <section className={classes.section}>
-        <Notifications />
         <div className={classes.auth}>
           <header className={classes.header}>
             <img src={authLogo} alt="logo" className={classes.logo} />
@@ -60,6 +58,7 @@ const AuthorizationPage: React.FC = () => {
             >
               <Input prefix={<UserOutlined />} placeholder="Логин" />
             </Form.Item>
+
             <Form.Item
               label="Пароль"
               layout="vertical"

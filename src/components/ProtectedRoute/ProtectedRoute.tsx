@@ -2,8 +2,8 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { ReactNode } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../store";
-import Notifications from "./Notifications";
+import { RootState } from "../../store";
+import Notifications from "../Notifications/Notifications";
 
 interface ProtectedRouteProps {
   children: ReactNode;

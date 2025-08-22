@@ -1,20 +1,21 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  LOGIN_PATTERN,
   MAX_LENGTH,
   MIN_LOGIN_LENGTH,
   MIN_PASSWORD_LENGTH,
   MIN_USERNAME_LENGTH,
+  USERNAME_PATTERN,
 } from "../../constants";
 import classes from "./Registration.module.css";
 import { Form, Input, Button, ConfigProvider } from "antd";
-import { registerUser } from "../../store/thunks";
+import { registerUser } from "../../store/thunks/auth-thunk";
 import { AppDispatch, RootState } from "../../store";
 import { UserRegistration } from "../../types/auth";
-import { showAuthLink } from "../../store/ui-slice";
+import { showAuthLink } from "../../store/slices/ui-slice";
 import Promo from "../../components/Promo/Promo";
 import { useNavigate } from "react-router-dom";
-import Notifications from "../../components/Notifications";
 
 const RegistrationPage: React.FC = () => {
   const navigate = useNavigate();
@@ -45,7 +46,6 @@ const RegistrationPage: React.FC = () => {
         <Promo />
       </aside>
       <section className={classes.section}>
-        <Notifications />
         <div className={classes.registration}>
           <header className={classes.header}>
             <h1>Пройдите регистрацию</h1>
@@ -78,10 +78,16 @@ const RegistrationPage: React.FC = () => {
                   {
                     required: true,
                     whitespace: true,
+                    message: "Имя пользователя обязательно",
+                  },
+                  {
                     min: MIN_USERNAME_LENGTH,
                     max: MAX_LENGTH,
-                    pattern: /^[a-zA-Zа-яА-ЯёЁ\s]+$/,
-                    message: "Введите от 1 до 60 символов русского/латинского алфавита!",
+                    message: `Введите от ${MIN_USERNAME_LENGTH} до ${MAX_LENGTH} символов!`,
+                  },
+                  {
+                    pattern: USERNAME_PATTERN,
+                    message: "Допустимы только буквы русского и латинского алфавита",
                   },
                 ]}
               >
@@ -94,10 +100,16 @@ const RegistrationPage: React.FC = () => {
                   {
                     required: true,
                     whitespace: true,
+                    message: "Логин обязателен",
+                  },
+                  {
                     min: MIN_LOGIN_LENGTH,
                     max: MAX_LENGTH,
-                    pattern: /^[a-zA-Z\s]+$/,
-                    message: "Введите от 2 до 60 символов латинского алфавита!",
+                    message: `Введите от ${MIN_LOGIN_LENGTH} до ${MAX_LENGTH} символов!`,
+                  },
+                  {
+                    pattern: LOGIN_PATTERN,
+                    message: "Допустимы только буквы латинского алфавита",
                   },
                 ]}
               >
@@ -111,7 +123,7 @@ const RegistrationPage: React.FC = () => {
                     required: true,
                     min: MIN_PASSWORD_LENGTH,
                     max: MAX_LENGTH,
-                    message: "Введите от 6 до 60 символов!",
+                    message: `Введите от ${MIN_PASSWORD_LENGTH} до ${MAX_LENGTH} символов!`,
                   },
                 ]}
                 hasFeedback

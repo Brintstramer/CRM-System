@@ -1,7 +1,7 @@
 import React from "react";
 import classes from "../TaskList/TaskList.module.css";
-import Task from "../Task/Task";
-import { Todo } from "../../types/todos";
+import Task from "../../../components/Todos/Task/Task";
+import { Todo } from "../../../types/todos";
 
 type TaskListProps = {
   fetchFilteredTaskList: () => Promise<void>;

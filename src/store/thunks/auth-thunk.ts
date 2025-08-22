@@ -6,10 +6,11 @@ import {
   RefreshToken,
   Token,
   UserRegistration,
-} from "../types/auth";
-import { api } from "../api/api";
-import { handleAxiosError } from "../utils/axiosError";
-import { tokenManager } from "../utils/tokenManager";
+} from "../../types/auth";
+import { api } from "../../api/api";
+import { handleAxiosError } from "../../utils/axiosError";
+import { tokenManager } from "../../utils/tokenManager";
+import axios from "axios";
 
 export const registerUser = createAsyncThunk<Profile, UserRegistration, { rejectValue: string }>(
   "auth/register",
@@ -37,9 +38,10 @@ export const loginUser = createAsyncThunk<Token, AuthData, { rejectValue: string
       return data;
     } catch (error) {
       const errorMessage = handleAxiosError(error, "Ошибка авторизации");
-      if (errorMessage.includes("401")) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
         return rejectWithValue("Неверные логин или пароль");
       }
+      console.log(error);
       return rejectWithValue(errorMessage);
     }
   },

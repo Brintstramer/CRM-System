@@ -1,6 +1,6 @@
 import { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import store from "../store";
-import { refreshAccessToken } from "../store/thunks";
+import { refreshAccessToken } from "../store/thunks/auth-thunk.ts";
 import { Token } from "../types/auth.ts";
 import { tokenManager } from "../utils/tokenManager.ts";
 
@@ -34,14 +34,14 @@ export const setupInterceptors = (api: AxiosInstance) => {
     (response) => response,
     async (error: AxiosError) => {
       const originalRequest = error.config as InternalAxiosRequestConfig & {
-        _retry: boolean;
+        _retry?: boolean;
       };
 
       if (
         error.response?.status === 401 &&
         !originalRequest._retry &&
-        error.config?.url?.includes("auth/signin") &&
-        error.config?.url?.includes("auth/refresh")
+        !error.config?.url?.includes("auth/signin") &&
+        !error.config?.url?.includes("auth/refresh")
       ) {
         originalRequest._retry = true;
         try {

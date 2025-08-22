@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs } from "antd";
-import { Filter, TodoInfo } from "../types/todos";
+import { Filter, TodoInfo } from "../../../types/todos";
 
 type TabsProps = {
   setFilter: (filter: Filter) => void;
